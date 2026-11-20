@@ -1,1 +1,1 @@
-python -c "from delta import configure_spark_with_delta_pip; from pyspark.sql import SparkSession; print('Delta Spark integration imports successfully')"
+python -c "import pyspark, delta; print('PySpark:', pyspark.__version__); print('Delta:', delta.__version__)"
