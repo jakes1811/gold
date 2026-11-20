@@ -1,0 +1,579 @@
+stock silver
+  [
+  {
+    "column_name": "tick_id",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "symbol",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "yahoo_symbol",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "current_price",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "change",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "change_percent",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "currency",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "source",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "market_timestamp",
+    "column_type": "TIMESTAMP",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "fetched_timestamp",
+    "column_type": "TIMESTAMP",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "publication_timestamp",
+    "column_type": "TIMESTAMP",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "silver_ingested_at",
+    "column_type": "TIMESTAMP",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "topic",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "partition",
+    "column_type": "INTEGER",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "offset",
+    "column_type": "BIGINT",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_timestamp",
+    "column_type": "TIMESTAMP",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_key",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "raw_json",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  }
+]
+
+silver news by ticker
+  [
+  {
+    "column_name": "article_id",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "bronze_file",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "cleaned_full_text",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "cleaned_headline",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "full_text",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "headline",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "ingested_at",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "json_parse_failed",
+    "column_type": "BOOLEAN",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_key",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_ts",
+    "column_type": "TIMESTAMP_NS",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "matched_tickers",
+    "column_type": "VARCHAR[]",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "negative_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "neutral_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "offset",
+    "column_type": "BIGINT",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "partition",
+    "column_type": "BIGINT",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "positive_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "published_at",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "raw_json",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "sentiment",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "sentiment_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "source",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "text_for_analysis",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "ticker",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "topic",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "url",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "validation_reason",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "validation_status",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  }
+]
+
+silver news 
+  [
+  {
+    "column_name": "article_id",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "bronze_file",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "cleaned_full_text",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "cleaned_headline",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "full_text",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "headline",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "ingested_at",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "json_parse_failed",
+    "column_type": "BOOLEAN",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_key",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "kafka_ts",
+    "column_type": "TIMESTAMP_NS",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "matched_tickers",
+    "column_type": "VARCHAR[]",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "negative_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "neutral_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "offset",
+    "column_type": "BIGINT",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "partition",
+    "column_type": "BIGINT",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "positive_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "published_at",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "raw_json",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "sentiment",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "sentiment_score",
+    "column_type": "DOUBLE",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "source",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "text_for_analysis",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "topic",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "url",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "validation_reason",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  },
+  {
+    "column_name": "validation_status",
+    "column_type": "VARCHAR",
+    "null": "YES",
+    "key": null,
+    "default": null,
+    "extra": null
+  }
+]
