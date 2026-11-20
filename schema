@@ -1,0 +1,17 @@
+"""Spark schemas (DDL strings). Delta tables carry their own schema; Parquet streaming needs these."""
+BRONZE_DDL = ("kafka_key STRING, raw_json STRING, topic STRING, partition INT, offset LONG, kafka_ts TIMESTAMP")
+
+# Silver ticks (valid records) written by silver/ticks/silver_ticks.py
+SILVER_TICKS_DDL = (
+    "tick_id STRING, symbol STRING, yahoo_symbol STRING, current_price DOUBLE, change DOUBLE, change_percent DOUBLE, "
+    "currency STRING, source STRING, market_timestamp TIMESTAMP, fetched_timestamp TIMESTAMP, "
+    "publication_timestamp TIMESTAMP, silver_ingested_at TIMESTAMP, topic STRING, partition INT, offset LONG, "
+    "kafka_timestamp TIMESTAMP, kafka_key STRING, raw_json STRING"
+)
+
+# Silver news by ticker (Parquet batches written by silver/news; batch_id is the partition folder)
+NEWS_BY_TICKER_DDL = (
+    "article_id STRING, ticker STRING, published_at STRING, ingested_at STRING, headline STRING, source STRING, "
+    "url STRING, sentiment STRING, positive_score DOUBLE, negative_score DOUBLE, neutral_score DOUBLE, "
+    "sentiment_score DOUBLE, batch_id STRING"
+)
