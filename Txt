@@ -1,79 +1,198 @@
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>python run_gold.py               
 
-import os
+========== FINTEL GOLD STARTING ==========
 
-# Local Spark configuration for Windows
-os.environ["SPARK_LOCAL_IP"] = "127.0.0.1"
-os.environ["HADOOP_HOME"] = r"C:\hadoop"
-os.environ["hadoop.home.dir"] = r"C:\hadoop"
+WARNING: Using incubator modules: jdk.incubator.vector
+:: loading settings :: url = jar:file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/gold_venv/Lib/site-packages/pyspark/jars/ivy-2.5.3.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: C:\Users\2000209445\.ivy2.5.2\cache
+The jars for the packages stored in: C:\Users\2000209445\.ivy2.5.2\jars
+io.delta#delta-spark_4.1_2.13 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-cc802637-95b6-41a3-9879-6e6920c88c0b;1.0
+        confs: [default]
+        found io.delta#delta-spark_4.1_2.13;4.3.0 in central
+        found io.delta#delta-storage;4.3.0 in central
+        found io.unitycatalog#unitycatalog-client;0.5.0 in central
+        found org.slf4j#slf4j-api;2.0.13 in central
+        found org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 in central
+        found org.apache.logging.log4j#log4j-api;2.25.3 in central
+        found com.google.code.findbugs#jsr305;3.0.2 in central
+        found io.unitycatalog#unitycatalog-hadoop;0.5.0 in central
+        found org.apache.logging.log4j#log4j-core;2.25.3 in central
+        found io.delta#delta-kernel-api;4.3.0 in central
+        found org.roaringbitmap#RoaringBitmap;0.9.25 in central
+        found com.fasterxml.jackson.core#jackson-databind;2.13.5 in central
+        found com.fasterxml.jackson.core#jackson-annotations;2.13.5 in central
+        found com.fasterxml.jackson.core#jackson-core;2.13.5 in central
+        found com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 in central
+        found org.roaringbitmap#shims;0.9.25 in central
+        found io.delta#delta-kernel-defaults;4.3.0 in central
+        found org.apache.hadoop#hadoop-client-runtime;3.4.2 in central
+        found org.apache.parquet#parquet-hadoop;1.16.0 in central
+        found org.apache.parquet#parquet-column;1.16.0 in central
+        found org.apache.parquet#parquet-common;1.16.0 in central
+        found org.apache.parquet#parquet-format-structures;1.16.0 in central
+        found javax.annotation#javax.annotation-api;1.3.2 in central
+        found org.apache.parquet#parquet-encoding;1.16.0 in central
+        found org.locationtech.jts#jts-core;1.20.0 in central
+        found org.xerial.snappy#snappy-java;1.1.10.7 in central
+        found io.airlift#aircompressor;2.0.2 in central
+        found commons-pool#commons-pool;1.6 in central
+        found com.github.luben#zstd-jni;1.5.7-3 in central
+        found org.apache.hadoop#hadoop-client-api;3.4.2 in central
+        found commons-logging#commons-logging;1.3.0 in central
+        found org.apache.parquet#parquet-jackson;1.16.0 in central
+        found io.delta#delta-kernel-unitycatalog;4.3.0 in central
+:: resolution report :: resolve 2330ms :: artifacts dl 176ms
+        :: modules in use:
+        com.fasterxml.jackson.core#jackson-annotations;2.13.5 from central in [default]
+        com.fasterxml.jackson.core#jackson-core;2.13.5 from central in [default]
+        com.fasterxml.jackson.core#jackson-databind;2.13.5 from central in [default]
+        com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 from central in [default]
+        com.github.luben#zstd-jni;1.5.7-3 from central in [default]
+        com.google.code.findbugs#jsr305;3.0.2 from central in [default]
+        commons-logging#commons-logging;1.3.0 from central in [default]
+        commons-pool#commons-pool;1.6 from central in [default]
+        io.airlift#aircompressor;2.0.2 from central in [default]
+        io.delta#delta-kernel-api;4.3.0 from central in [default]
+        io.delta#delta-kernel-defaults;4.3.0 from central in [default]
+        io.delta#delta-kernel-unitycatalog;4.3.0 from central in [default]
+        io.delta#delta-spark_4.1_2.13;4.3.0 from central in [default]
+        io.delta#delta-storage;4.3.0 from central in [default]
+        io.unitycatalog#unitycatalog-client;0.5.0 from central in [default]
+        io.unitycatalog#unitycatalog-hadoop;0.5.0 from central in [default]
+        javax.annotation#javax.annotation-api;1.3.2 from central in [default]
+        org.apache.hadoop#hadoop-client-api;3.4.2 from central in [default]
+        org.apache.hadoop#hadoop-client-runtime;3.4.2 from central in [default]
+        org.apache.logging.log4j#log4j-api;2.25.3 from central in [default]
+        org.apache.logging.log4j#log4j-core;2.25.3 from central in [default]
+        org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 from central in [default]
+        org.apache.parquet#parquet-column;1.16.0 from central in [default]
+        org.apache.parquet#parquet-common;1.16.0 from central in [default]
+        org.apache.parquet#parquet-encoding;1.16.0 from central in [default]
+        org.apache.parquet#parquet-format-structures;1.16.0 from central in [default]
+        org.apache.parquet#parquet-hadoop;1.16.0 from central in [default]
+        org.apache.parquet#parquet-jackson;1.16.0 from central in [default]
+        org.locationtech.jts#jts-core;1.20.0 from central in [default]
+        org.roaringbitmap#RoaringBitmap;0.9.25 from central in [default]
+        org.roaringbitmap#shims;0.9.25 from central in [default]
+        org.slf4j#slf4j-api;2.0.13 from central in [default]
+        org.xerial.snappy#snappy-java;1.1.10.7 from central in [default]
+        :: evicted modules:
+        org.slf4j#slf4j-api;2.0.17 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.slf4j#slf4j-api;1.7.36 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.slf4j#slf4j-api;1.7.33 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.xerial.snappy#snappy-java;1.1.10.4 by [org.xerial.snappy#snappy-java;1.1.10.7] in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   37  |   0   |   0   |   4   ||   33  |   0   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-cc802637-95b6-41a3-9879-6e6920c88c0b
+        confs: [default]
+        0 artifacts copied, 33 already retrieved (0kB/70ms)
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/20 14:50:04 ERROR Inbox: Ignoring error
+java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
+        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
+        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
+        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
+        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
+        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
+        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
+        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+26/11/20 14:50:04 WARN Executor: Issue communicating with driver in heartbeater
+org.apache.spark.SparkException: Exception thrown in awaitResult: 
+        at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:53)
+        at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:359)
+        at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
+        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:101)
+        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:85)
+        at org.apache.spark.storage.BlockManagerMaster.registerBlockManager(BlockManagerMaster.scala:81)
+        at org.apache.spark.storage.BlockManager.reregister(BlockManager.scala:674)
+        at org.apache.spark.executor.Executor.reportHeartBeat(Executor.scala:1363)
+        at org.apache.spark.executor.Executor.$anonfun$heartbeater$1(Executor.scala:356)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
+        at org.apache.spark.Heartbeater$$anon$1.run(Heartbeater.scala:46)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
+        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
+        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
+        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
+        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
+        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
+        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
+        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
+        ... 3 more
+26/11/20 14:50:14 ERROR Inbox: Ignoring error
+java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
+        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
+        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
+        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
+        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
+        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
+        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
+        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+26/11/20 14:50:14 WARN Executor: Issue communicating with driver in heartbeater
+org.apache.spark.SparkException: Exception thrown in awaitResult: 
+        at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:53)
+        at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:359)
+        at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
+        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:101)
+        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:85)
+        at org.apache.spark.storage.BlockManagerMaster.registerBlockManager(BlockManagerMaster.scala:81)
+        at org.apache.spark.storage.BlockManager.reregister(BlockManager.scala:674)
+        at org.apache.spark.executor.Executor.reportHeartBeat(Executor.scala:1363)
+        at org.apache.spark.executor.Executor.$anonfun$heartbeater$1(Executor.scala:356)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
+        at org.apache.spark.Heartbeater$$anon$1.run(Heartbeater.scala:46)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
+        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
+        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
+        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
+        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
+        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
+        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
+        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
+        ... 3 more
 
-from pyspark.sql import SparkSession
-from delta import configure_spark_with_delta_pip
+[GOLD] INPUT CONFIGURATION
+[GOLD] Stock Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\Market_ticker\silver\data\stock_silver
+[GOLD] Stock format: delta
+[GOLD] News Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker
+[GOLD] News format: parquet
+[GOLD] News event-time column: ingested_at
+[GOLD] Gold output: C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\gold\sentiment_price
+26/11/20 14:50:45 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 
-from config import settings
-from common import audit
-from gold.gold_job import start_gold
-
-
-def main():
-    print("\n========== FINTEL GOLD STARTING ==========\n")
-
-    builder = (
-        SparkSession.builder
-        .appName("FinTel-Gold-Integration")
-        .master(settings.SPARK_MASTER)
-        .config(
-            "spark.sql.extensions",
-            "io.delta.sql.DeltaSparkSessionExtension"
-        )
-        .config(
-            "spark.sql.catalog.spark_catalog",
-            "org.apache.spark.sql.delta.catalog.DeltaCatalog"
-        )
-        .config("spark.driver.memory", settings.SPARK_DRIVER_MEMORY)
-        .config("spark.sql.shuffle.partitions", "4")
-        .config("spark.driver.host", "127.0.0.1")
-        .config("spark.driver.bindAddress", "127.0.0.1")
-    )
-
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
-
-    run_id = audit.new_run_id()
-    audit.job_start(run_id, "gold_job")
-
-    query = None
-
-    try:
-        query = start_gold(spark, run_id)
-
-        print("[OK] Gold streaming job started")
-        print("[OK] Stock Silver + News Silver connected")
-        print("[INFO] Waiting for incoming Silver data...")
-        print("[INFO] Press Ctrl+C to stop")
-
-        query.awaitTermination()
-
-    except KeyboardInterrupt:
-        print("\n[INFO] Stopping Gold pipeline...")
-
-    except Exception as error:
-        audit.job_end(
-            run_id,
-            "gold_job",
-            status="FAILED",
-            last_error=str(error)
-        )
-        raise
-
-    finally:
-        if query is not None and query.isActive:
-            query.stop()
-
-        audit.job_end(run_id, "gold_job", status="STOPPED")
-        spark.stop()
-
-        print("[INFO] Gold pipeline stopped")
-
-
-if __name__ == "__main__":
-    main()
+[GOLD] Streaming query started successfully.
+[GOLD] Query ID: 0dde33be-0103-4a79-8e80-efa13709f6e5
+[OK] Gold streaming job started
+[OK] Stock Silver + News Silver connected
+[INFO] Waiting for incoming Silver data...
+[INFO] Press Ctrl+C to stop
+26/11/20 14:50:47 WARN MicroBatchExecution: Disabling AQE since AQE is not supported in stateful workloads.
+26/11/20 14:50:51 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[Stage 49:>                                                         (0 + 4) / 4]
