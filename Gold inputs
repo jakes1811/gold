@@ -1,0 +1,117 @@
+
+from pathlib import Path
+
+from pyspark.sql import SparkSession
+from delta import configure_spark_with_delta_pip
+
+from config import settings
+from common.schemas import NEWS_BY_TICKER_DDL, SILVER_TICKS_DDL
+
+
+def main():
+
+    print("\n========== GOLD INPUT VALIDATION ==========\n")
+
+    # Check input paths
+    if not settings.SILVER_TICKS_PATH.exists():
+        raise FileNotFoundError(
+            f"Stock Silver not found: {settings.SILVER_TICKS_PATH}"
+        )
+
+    if not settings.SILVER_NEWS_BY_TICKER_PATH.exists():
+        raise FileNotFoundError(
+            f"News Silver not found: {settings.SILVER_NEWS_BY_TICKER_PATH}"
+        )
+
+    print("[OK] Stock Silver path exists")
+    print("[OK] News Silver path exists")
+
+    # Create Spark session with Delta support
+    builder = (
+        SparkSession.builder
+        .appName("FinTel-Gold-Input-Validation")
+        .master("local[2]")
+        .config(
+            "spark.sql.extensions",
+            "io.delta.sql.DeltaSparkSessionExtension"
+        )
+        .config(
+            "spark.sql.catalog.spark_catalog",
+            "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+        )
+    )
+
+    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+
+    spark.sparkContext.setLogLevel("WARN")
+
+    try:
+
+        # Read Stock Silver Delta schema
+        print("\n--- STOCK SILVER ---")
+
+        ticks = (
+            spark.readStream
+            .format("delta")
+            .load(str(settings.SILVER_TICKS_PATH))
+        )
+
+        ticks.printSchema()
+
+        print("[OK] Stock Silver Delta schema loaded")
+
+        # Read News Silver Parquet schema
+        print("\n--- NEWS SILVER BY TICKER ---")
+
+        news = (
+            spark.readStream
+            .format("parquet")
+            .schema(NEWS_BY_TICKER_DDL)
+            .option("recursiveFileLookup", "true")
+            .load(str(settings.SILVER_NEWS_BY_TICKER_PATH))
+        )
+
+        news.printSchema()
+
+        print("[OK] News Silver Parquet schema loaded")
+
+        # Check required columns
+        required_tick_columns = {
+            "symbol",
+            "current_price",
+            "change_percent",
+            "publication_timestamp"
+        }
+
+        required_news_columns = {
+            "ticker",
+            "headline",
+            "sentiment",
+            "sentiment_score",
+            "ingested_at"
+        }
+
+        missing_ticks = required_tick_columns - set(ticks.columns)
+        missing_news = required_news_columns - set(news.columns)
+
+        if missing_ticks:
+            raise ValueError(
+                f"Missing Stock Silver columns: {missing_ticks}"
+            )
+
+        if missing_news:
+            raise ValueError(
+                f"Missing News Silver columns: {missing_news}"
+            )
+
+        print("\n[OK] Required Stock Silver columns verified")
+        print("[OK] Required News Silver columns verified")
+
+        print("\n========== VALIDATION SUCCESSFUL ==========")
+
+    finally:
+        spark.stop()
+
+
+if __name__ == "__main__":
+    main()
