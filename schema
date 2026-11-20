@@ -1,17 +1,82 @@
-"""Spark schemas (DDL strings). Delta tables carry their own schema; Parquet streaming needs these."""
-BRONZE_DDL = ("kafka_key STRING, raw_json STRING, topic STRING, partition INT, offset LONG, kafka_ts TIMESTAMP")
 
-# Silver ticks (valid records) written by silver/ticks/silver_ticks.py
-SILVER_TICKS_DDL = (
-    "tick_id STRING, symbol STRING, yahoo_symbol STRING, current_price DOUBLE, change DOUBLE, change_percent DOUBLE, "
-    "currency STRING, source STRING, market_timestamp TIMESTAMP, fetched_timestamp TIMESTAMP, "
-    "publication_timestamp TIMESTAMP, silver_ingested_at TIMESTAMP, topic STRING, partition INT, offset LONG, "
-    "kafka_timestamp TIMESTAMP, kafka_key STRING, raw_json STRING"
+"""Spark schemas (DDL strings).
+
+Delta tables carry their own schema.
+Parquet streaming requires an explicit schema.
+"""
+
+# ---------------------------------------------------------
+# BRONZE SCHEMA
+# ---------------------------------------------------------
+
+BRONZE_DDL = (
+    "kafka_key STRING, "
+    "raw_json STRING, "
+    "topic STRING, "
+    "partition INT, "
+    "offset LONG, "
+    "kafka_ts TIMESTAMP"
 )
 
-# Silver news by ticker (Parquet batches written by silver/news; batch_id is the partition folder)
+
+# ---------------------------------------------------------
+# STOCK SILVER SCHEMA (DELTA)
+# Matches Market_ticker/silver/data/stock_silver
+# ---------------------------------------------------------
+
+SILVER_TICKS_DDL = (
+    "tick_id STRING, "
+    "symbol STRING, "
+    "yahoo_symbol STRING, "
+    "current_price DOUBLE, "
+    "change DOUBLE, "
+    "change_percent DOUBLE, "
+    "currency STRING, "
+    "source STRING, "
+    "market_timestamp TIMESTAMP, "
+    "fetched_timestamp TIMESTAMP, "
+    "publication_timestamp TIMESTAMP, "
+    "silver_ingested_at TIMESTAMP, "
+    "topic STRING, "
+    "partition INT, "
+    "offset LONG, "
+    "kafka_timestamp TIMESTAMP, "
+    "kafka_key STRING, "
+    "raw_json STRING"
+)
+
+
+# ---------------------------------------------------------
+# NEWS SILVER BY TICKER SCHEMA (PARQUET)
+# Matches silver_news/data/silver/news_by_ticker
+# ---------------------------------------------------------
+
 NEWS_BY_TICKER_DDL = (
-    "article_id STRING, ticker STRING, published_at STRING, ingested_at STRING, headline STRING, source STRING, "
-    "url STRING, sentiment STRING, positive_score DOUBLE, negative_score DOUBLE, neutral_score DOUBLE, "
-    "sentiment_score DOUBLE, batch_id STRING"
+    "article_id STRING, "
+    "ticker STRING, "
+    "published_at STRING, "
+    "ingested_at STRING, "
+    "headline STRING, "
+    "source STRING, "
+    "url STRING, "
+    "sentiment STRING, "
+    "positive_score DOUBLE, "
+    "negative_score DOUBLE, "
+    "neutral_score DOUBLE, "
+    "sentiment_score DOUBLE, "
+    "cleaned_headline STRING, "
+    "cleaned_full_text STRING, "
+    "full_text STRING, "
+    "text_for_analysis STRING, "
+    "matched_tickers ARRAY<STRING>, "
+    "kafka_key STRING, "
+    "kafka_ts TIMESTAMP, "
+    "offset LONG, "
+    "partition LONG, "
+    "topic STRING, "
+    "raw_json STRING, "
+    "bronze_file STRING, "
+    "json_parse_failed BOOLEAN, "
+    "validation_reason STRING, "
+    "validation_status STRING"
 )
