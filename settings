@@ -27,11 +27,7 @@ DATA_DIR = Path(
 
 TABLE_FORMAT = _env("FINTEL_TABLE_FORMAT", "delta").lower()
 
-# Existing Bronze paths (not used by this Gold job)
-BRONZE_NEWS_DIR = DATA_DIR / "bronze" / "news"
-BRONZE_TICKS_PATH = DATA_DIR / "bronze" / "stock_ticks"
-
-# ACTUAL STOCK SILVER INPUT - DELTA
+# Actual existing Silver output locations
 SILVER_TICKS_PATH = Path(
     _env(
         "FINTEL_SILVER_TICKS_PATH",
@@ -39,7 +35,6 @@ SILVER_TICKS_PATH = Path(
     )
 ).resolve()
 
-# ACTUAL NEWS SILVER INPUT - PARQUET
 SILVER_NEWS_BY_TICKER_PATH = Path(
     _env(
         "FINTEL_SILVER_NEWS_BY_TICKER_PATH",
@@ -49,27 +44,35 @@ SILVER_NEWS_BY_TICKER_PATH = Path(
 
 SILVER_NEWS_PATH = (
     BASE_DIR / "silver_news" / "data" / "silver" / "news"
-)
+).resolve()
 
 SILVER_TICKS_QUARANTINE_PATH = (
     BASE_DIR / "Market_ticker" / "silver" / "data" / "stock_quarantine"
-)
+).resolve()
 
-DEAD_LETTER_PATH = DATA_DIR / "silver" / "news_dead_letter"
+# Explicit source formats
+SILVER_TICKS_FORMAT = "delta"
+SILVER_NEWS_FORMAT = "parquet"
 
-# GOLD OUTPUT
+# Discover Parquet files inside batch_id folders
+SILVER_NEWS_RECURSIVE_LOOKUP = True
+
+# Gold output
 GOLD_PATH = DATA_DIR / "gold" / "sentiment_price"
 
-# GOLD CHECKPOINTS AND AUDIT
+# Gold checkpoints and audit
 CHECKPOINT_DIR = DATA_DIR / "checkpoints"
-AUDIT_DIR = DATA_DIR / "audit"
+GOLD_CHECKPOINT_PATH = CHECKPOINT_DIR / "gold"
 
+AUDIT_DIR = DATA_DIR / "audit"
 LOG_DIR = BASE_DIR / "logs"
 RUN_DIR = DATA_DIR / "run"
+
 SPARK_LOCAL_DIR = Path(
     _env("FINTEL_SPARK_LOCAL_DIR", DATA_DIR / "spark_tmp")
 )
 
+# Existing project model paths
 MODELS_DIR = BASE_DIR / "models"
 FINBERT_PATH = Path(
     _env("FINTEL_FINBERT_PATH", MODELS_DIR / "finbert")
@@ -93,7 +96,7 @@ TOPIC_PARTITIONS = int(
 
 
 # ---------------------------------------------------------
-# NEWS INGESTION
+# INGESTION SETTINGS (RETAINED)
 # ---------------------------------------------------------
 
 RSS_POLL_INTERVAL_SECONDS = int(
@@ -115,11 +118,6 @@ BUFFER_DIR = NEWS_STATE_DIR / "buffer"
 NEWS_CHECKPOINT_PATH = NEWS_STATE_DIR / "news_checkpoint.json"
 LATEST_NEWS_PATH = NEWS_STATE_DIR / "latest_news.json"
 SEEN_ARTICLES_FILE = NEWS_STATE_DIR / "seen_articles.json"
-
-
-# ---------------------------------------------------------
-# STOCK INGESTION
-# ---------------------------------------------------------
 
 STOCK_POLL_SECONDS = float(
     _env("FINTEL_STOCK_POLL_SECONDS", "900")
@@ -192,7 +190,7 @@ WATERMARK = _env(
     "FINTEL_WATERMARK", "10 minutes"
 )
 
-# News event time: ingestion time
+# News event time: ingestion timestamp
 NEWS_TIME_COLUMN = _env(
     "FINTEL_NEWS_TIME_COLUMN", "ingested_at"
 )
@@ -225,7 +223,7 @@ AUDIT_BACKEND = _env(
 
 
 # ---------------------------------------------------------
-# FINBERT OFFLINE CONFIGURATION
+# OFFLINE MODEL CONFIGURATION
 # ---------------------------------------------------------
 
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
@@ -233,24 +231,26 @@ os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 
 # ---------------------------------------------------------
-# CREATE REQUIRED GOLD DIRECTORIES
+# CREATE GOLD DIRECTORIES
 # ---------------------------------------------------------
 
 def ensure_dirs():
-    for p in (
+    directories = (
         DATA_DIR,
         GOLD_PATH,
         CHECKPOINT_DIR,
+        GOLD_CHECKPOINT_PATH,
         AUDIT_DIR,
         LOG_DIR,
         RUN_DIR,
         SPARK_LOCAL_DIR,
         NEWS_STATE_DIR,
         BUFFER_DIR,
-        BRONZE_NEWS_DIR,
         MODELS_DIR,
-    ):
-        Path(p).mkdir(parents=True, exist_ok=True)
+    )
+
+    for directory in directories:
+        Path(directory).mkdir(parents=True, exist_ok=True)
 
 
 ensure_dirs()
