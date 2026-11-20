@@ -1,97 +1,373 @@
-"""GOLD: stream-stream join of Silver price ticks and Silver news sentiment (Phase 4 of the spec).
 
-  Silver ticks (event time = publication_timestamp)  --> 5-min windows sliding every 1 min, 10-min watermark
-  Silver news  (event time = ingested_at)            --> 5-min windows sliding every 1 min, 10-min watermark
-  LEFT OUTER stream-stream join on (symbol, window): every stock/window keeps its price statistics even when
-  no article arrived (article_count = 0). Rows are emitted once the window is finalised by the watermark.
-
-Output: data/gold/sentiment_price (Delta/Parquet, append-only) and optionally Postgres `gold_sentiment_price`.
-Audit: gold_aggregation_audit (inputs, dropped-late rows, duration per trigger) + pipeline_execution_audit.
 """
-import time
+GOLD LAYER - FinTel Phase 4
+
+Inputs:
+    Stock Silver : Delta
+    News Silver  : Parquet
+
+Processing:
+    - Stock and news stream aggregation
+    - 5-minute windows
+    - 1-minute sliding interval
+    - 10-minute watermark
+    - Stream-stream LEFT OUTER JOIN
+    - Sentiment and stock price analysis
+    - Alert generation
+
+Outputs:
+    data/gold/sentiment_price
+    data/audit/gold_aggregation_audit.jsonl
+
+Optional:
+    PostgreSQL gold_sentiment_price
+"""
 
 from pyspark.sql import functions as F
 from pyspark.sql.streaming import StreamingQueryListener
 
 from common import audit
-from common.schemas import NEWS_BY_TICKER_DDL, SILVER_TICKS_DDL
+from common.schemas import (
+    NEWS_BY_TICKER_DDL,
+    SILVER_TICKS_DDL
+)
 from common.tables import read_stream, write_batch
 from config import settings
 
+
+# =========================================================
+# CONSTANTS
+# =========================================================
+
 JOB = "gold_job"
 QUERY_NAME = "gold-sentiment-price"
-GOLD_COLUMNS = [
-    "window_start", "window_end", "symbol", "article_count", "avg_sentiment", "min_sentiment", "latest_headline",
-    "latest_sentiment_label", "price_first", "price_last", "price_high", "price_low", "price_change_pct",
-    "price_range_pct", "tick_count", "day_change_pct", "alert_flag", "alert_reason", "computed_at",
-]
-_batch_outputs = {}          # batch_id -> (rows, min window_start, max window_end), filled by foreachBatch
 
+GOLD_COLUMNS = [
+    "window_start",
+    "window_end",
+    "symbol",
+    "article_count",
+    "avg_sentiment",
+    "min_sentiment",
+    "latest_headline",
+    "latest_sentiment_label",
+    "price_first",
+    "price_last",
+    "price_high",
+    "price_low",
+    "price_change_pct",
+    "price_range_pct",
+    "tick_count",
+    "day_change_pct",
+    "alert_flag",
+    "alert_reason",
+    "computed_at",
+]
+
+# batch_id -> (rows, min window_start, max window_end)
+_batch_outputs = {}
+
+
+# =========================================================
+# BUILD GOLD STREAM
+# =========================================================
 
 def build_gold_stream(ticks_raw, news_raw):
-    """Pure DataFrame logic (also used by the self-test). Returns the joined, finalised Gold stream."""
-    ticks = (ticks_raw
-             .where(F.col("current_price") > 0)
-             .select(F.col("symbol"), F.col("current_price").alias("price"), F.col("change_percent"),
-                     F.col("publication_timestamp").alias("tick_time"))
-             .withWatermark("tick_time", settings.WATERMARK))
+    """
+    Build the Gold streaming DataFrame.
 
-    tick_win = (ticks.groupBy(F.col("symbol"),
-                              F.window("tick_time", settings.WINDOW_DURATION, settings.SLIDE_DURATION).alias("w"))
-                .agg(F.min_by("price", "tick_time").alias("price_first"),
-                     F.max_by("price", "tick_time").alias("price_last"),
-                     F.max("price").alias("price_high"),
-                     F.min("price").alias("price_low"),
-                     F.count(F.lit(1)).alias("tick_count"),
-                     F.max_by("change_percent", "tick_time").alias("day_change_pct")))
+    Stock:
+        Aggregate prices by symbol and time window.
 
-    news = (news_raw
-            .select("article_id", F.col("ticker").alias("symbol"), "headline", "sentiment", "sentiment_score",
-                    F.try_to_timestamp(F.col(settings.NEWS_TIME_COLUMN)).alias("news_time"))
-            .where(F.col("news_time").isNotNull() & F.col("sentiment_score").isNotNull())
-            .withWatermark("news_time", settings.WATERMARK))
+    News:
+        Aggregate sentiment by ticker and time window.
 
-    news_win = (news.groupBy(F.col("symbol").alias("n_symbol"),
-                             F.window("news_time", settings.WINDOW_DURATION, settings.SLIDE_DURATION).alias("n_w"))
-                .agg(F.count(F.lit(1)).alias("article_count"),
-                     F.avg("sentiment_score").alias("avg_sentiment"),
-                     F.min("sentiment_score").alias("min_sentiment"),
-                     F.max_by("headline", "news_time").alias("latest_headline"),
-                     F.max_by("sentiment", "news_time").alias("latest_sentiment_label")))
+    Join:
+        LEFT OUTER JOIN on symbol and matching window.
+    """
+
+    # -----------------------------------------------------
+    # 1. STOCK SILVER PROCESSING
+    # -----------------------------------------------------
+
+    ticks = (
+        ticks_raw
+        .where(F.col("current_price") > 0)
+        .where(F.col("publication_timestamp").isNotNull())
+        .select(
+            F.col("symbol"),
+            F.col("current_price").alias("price"),
+            F.col("change_percent"),
+            F.col("publication_timestamp").alias("tick_time")
+        )
+        .withWatermark(
+            "tick_time",
+            settings.WATERMARK
+        )
+    )
+
+    # -----------------------------------------------------
+    # 2. STOCK WINDOW AGGREGATION
+    # -----------------------------------------------------
+
+    tick_win = (
+        ticks
+        .groupBy(
+            F.col("symbol"),
+            F.window(
+                "tick_time",
+                settings.WINDOW_DURATION,
+                settings.SLIDE_DURATION
+            ).alias("w")
+        )
+        .agg(
+            F.min_by(
+                "price", "tick_time"
+            ).alias("price_first"),
+
+            F.max_by(
+                "price", "tick_time"
+            ).alias("price_last"),
+
+            F.max("price").alias("price_high"),
+
+            F.min("price").alias("price_low"),
+
+            F.count(
+                F.lit(1)
+            ).alias("tick_count"),
+
+            F.max_by(
+                "change_percent", "tick_time"
+            ).alias("day_change_pct")
+        )
+    )
+
+    # -----------------------------------------------------
+    # 3. NEWS SILVER PROCESSING
+    # -----------------------------------------------------
+
+    news = (
+        news_raw
+        .select(
+            "article_id",
+            F.col("ticker").alias("symbol"),
+            "headline",
+            "sentiment",
+            "sentiment_score",
+
+            F.try_to_timestamp(
+                F.col(settings.NEWS_TIME_COLUMN)
+            ).alias("news_time")
+        )
+        .where(
+            F.col("news_time").isNotNull()
+            & F.col("sentiment_score").isNotNull()
+            & F.col("symbol").isNotNull()
+        )
+        .withWatermark(
+            "news_time",
+            settings.WATERMARK
+        )
+    )
+
+    # -----------------------------------------------------
+    # 4. NEWS WINDOW AGGREGATION
+    # -----------------------------------------------------
+
+    news_win = (
+        news
+        .groupBy(
+            F.col("symbol").alias("n_symbol"),
+            F.window(
+                "news_time",
+                settings.WINDOW_DURATION,
+                settings.SLIDE_DURATION
+            ).alias("n_w")
+        )
+        .agg(
+            F.count(
+                F.lit(1)
+            ).alias("article_count"),
+
+            F.avg(
+                "sentiment_score"
+            ).alias("avg_sentiment"),
+
+            F.min(
+                "sentiment_score"
+            ).alias("min_sentiment"),
+
+            F.max_by(
+                "headline", "news_time"
+            ).alias("latest_headline"),
+
+            F.max_by(
+                "sentiment", "news_time"
+            ).alias("latest_sentiment_label")
+        )
+    )
+
+    # -----------------------------------------------------
+    # 5. STREAM-STREAM LEFT OUTER JOIN
+    # -----------------------------------------------------
 
     joined = tick_win.join(
         news_win,
-        (F.col("symbol") == F.col("n_symbol")) & (F.col("w") == F.col("n_w")),
-        "leftOuter")
 
-    change = (F.col("price_last") - F.col("price_first")) / F.col("price_first") * 100
-    bad_sentiment = F.col("avg_sentiment") <= F.lit(settings.ALERT_SENTIMENT_THRESHOLD)
-    price_drop = change <= F.lit(settings.ALERT_PRICE_DROP_PCT)
-    return (joined.select(
-        F.col("w.start").alias("window_start"), F.col("w.end").alias("window_end"), "symbol",
-        F.coalesce(F.col("article_count"), F.lit(0)).cast("int").alias("article_count"),
-        "avg_sentiment", "min_sentiment", "latest_headline", "latest_sentiment_label",
-        "price_first", "price_last", "price_high", "price_low",
-        change.alias("price_change_pct"),
-        ((F.col("price_high") - F.col("price_low")) / F.col("price_first") * 100).alias("price_range_pct"),
-        F.col("tick_count").cast("long").alias("tick_count"), "day_change_pct")
-        .withColumn("price_change_pct", F.round("price_change_pct", 4))
-        .withColumn("price_range_pct", F.round("price_range_pct", 4))
-        .withColumn("alert_flag", F.coalesce(bad_sentiment, F.lit(False)))
-        .withColumn("alert_reason",
-                    F.when(bad_sentiment & price_drop,
-                           F.concat(F.lit("negative sentiment ("), F.round("avg_sentiment", 2).cast("string"),
-                                    F.lit(") with price drop ("), F.round("price_change_pct", 2).cast("string"),
-                                    F.lit("%)")))
-                    .when(bad_sentiment,
-                          F.concat(F.lit("negative sentiment ("), F.round("avg_sentiment", 2).cast("string"),
-                                   F.lit("), price not yet reacting"))))
-        .withColumn("computed_at", F.current_timestamp())
-        .select(*GOLD_COLUMNS))
+        (
+            F.col("symbol") == F.col("n_symbol")
+        )
+        &
+        (
+            F.col("w") == F.col("n_w")
+        ),
 
+        "leftOuter"
+    )
+
+    # -----------------------------------------------------
+    # 6. PRICE CHANGE CALCULATION
+    # -----------------------------------------------------
+
+    change = (
+        (
+            F.col("price_last")
+            - F.col("price_first")
+        )
+        / F.col("price_first")
+        * 100
+    )
+
+    bad_sentiment = (
+        F.col("avg_sentiment")
+        <= F.lit(settings.ALERT_SENTIMENT_THRESHOLD)
+    )
+
+    price_drop = (
+        change
+        <= F.lit(settings.ALERT_PRICE_DROP_PCT)
+    )
+
+    # -----------------------------------------------------
+    # 7. GOLD FINAL OUTPUT
+    # -----------------------------------------------------
+
+    gold = (
+        joined
+        .select(
+            F.col("w.start").alias("window_start"),
+            F.col("w.end").alias("window_end"),
+
+            F.col("symbol"),
+
+            F.coalesce(
+                F.col("article_count"),
+                F.lit(0)
+            ).cast("int").alias("article_count"),
+
+            F.col("avg_sentiment"),
+            F.col("min_sentiment"),
+
+            F.col("latest_headline"),
+            F.col("latest_sentiment_label"),
+
+            F.col("price_first"),
+            F.col("price_last"),
+            F.col("price_high"),
+            F.col("price_low"),
+
+            change.alias("price_change_pct"),
+
+            (
+                (
+                    F.col("price_high")
+                    - F.col("price_low")
+                )
+                / F.col("price_first")
+                * 100
+            ).alias("price_range_pct"),
+
+            F.col("tick_count").cast("long").alias("tick_count"),
+
+            F.col("day_change_pct")
+        )
+
+        .withColumn(
+            "price_change_pct",
+            F.round("price_change_pct", 4)
+        )
+
+        .withColumn(
+            "price_range_pct",
+            F.round("price_range_pct", 4)
+        )
+
+        .withColumn(
+            "alert_flag",
+            F.coalesce(
+                bad_sentiment,
+                F.lit(False)
+            )
+        )
+
+        .withColumn(
+            "alert_reason",
+
+            F.when(
+                bad_sentiment & price_drop,
+
+                F.concat(
+                    F.lit("negative sentiment ("),
+
+                    F.round(
+                        "avg_sentiment", 2
+                    ).cast("string"),
+
+                    F.lit(") with price drop ("),
+
+                    F.round(
+                        "price_change_pct", 2
+                    ).cast("string"),
+
+                    F.lit("%)")
+                )
+            )
+
+            .when(
+                bad_sentiment,
+
+                F.concat(
+                    F.lit("negative sentiment ("),
+
+                    F.round(
+                        "avg_sentiment", 2
+                    ).cast("string"),
+
+                    F.lit("), price not yet reacting")
+                )
+            )
+        )
+
+        .withColumn(
+            "computed_at",
+            F.current_timestamp()
+        )
+
+        .select(*GOLD_COLUMNS)
+    )
+
+    return gold
+
+
+# =========================================================
+# GOLD PROGRESS AUDIT
+# =========================================================
 
 class GoldProgressAudit(StreamingQueryListener):
-    """Writes one gold_aggregation_audit row per trigger: inputs, rows dropped as late, duration."""
+    """
+    Writes one Gold audit record per streaming trigger.
+    """
 
     def __init__(self, run_id):
         super().__init__()
@@ -107,77 +383,385 @@ class GoldProgressAudit(StreamingQueryListener):
         pass
 
     def onQueryProgress(self, event):
+
         p = event.progress
+
         if p.name != QUERY_NAME:
             return
-        news_in = tick_in = 0
+
+        news_in = 0
+        tick_in = 0
+
         for source in p.sources:
+
             desc = str(source.description)
+
             if "news_by_ticker" in desc:
                 news_in += int(source.numInputRows or 0)
             else:
                 tick_in += int(source.numInputRows or 0)
-        late = sum(int(getattr(op, "numRowsDroppedByWatermark", 0) or 0) for op in p.stateOperators)
-        rows, wmin, wmax = _batch_outputs.pop(p.batchId, (0, None, None))
-        audit.write_audit("gold_aggregation_audit", {
-            "run_id": self.run_id, "job_name": JOB, "batch_id": int(p.batchId),
-            "window_start_min": wmin, "window_end_max": wmax,
-            "input_news_count": news_in, "input_tick_count": tick_in, "output_row_count": rows,
-            "late_records": late,
-            "duration_ms": int((p.durationMs or {}).get("triggerExecution", 0)), "status": "OK"})
 
+        late = sum(
+            int(
+                getattr(
+                    op,
+                    "numRowsDroppedByWatermark",
+                    0
+                ) or 0
+            )
+            for op in p.stateOperators
+        )
+
+        rows, wmin, wmax = _batch_outputs.pop(
+            p.batchId,
+            (0, None, None)
+        )
+
+        audit.write_audit(
+            "gold_aggregation_audit",
+
+            {
+                "run_id": self.run_id,
+                "job_name": JOB,
+                "batch_id": int(p.batchId),
+
+                "window_start_min": wmin,
+                "window_end_max": wmax,
+
+                "input_news_count": news_in,
+                "input_tick_count": tick_in,
+
+                "output_row_count": rows,
+                "late_records": late,
+
+                "duration_ms": int(
+                    (p.durationMs or {}).get(
+                        "triggerExecution", 0
+                    )
+                ),
+
+                "status": "OK"
+            }
+        )
+
+
+# =========================================================
+# OPTIONAL POSTGRES UPSERT
+# =========================================================
 
 def _postgres_upsert(rows):
+
     import psycopg2
-    con = psycopg2.connect(host=settings.PG_HOST, port=settings.PG_PORT, dbname=settings.PG_DB,
-                           user=settings.PG_USER, password=settings.PG_PASSWORD, connect_timeout=5)
+
+    con = psycopg2.connect(
+        host=settings.PG_HOST,
+        port=settings.PG_PORT,
+        dbname=settings.PG_DB,
+        user=settings.PG_USER,
+        password=settings.PG_PASSWORD,
+        connect_timeout=5
+    )
+
     cols = GOLD_COLUMNS
-    sets = ", ".join(f"{c}=EXCLUDED.{c}" for c in cols if c not in ("window_start", "symbol"))
+
+    sets = ", ".join(
+        f"{c}=EXCLUDED.{c}"
+        for c in cols
+        if c not in (
+            "window_start",
+            "symbol"
+        )
+    )
+
     with con, con.cursor() as cur:
-        cur.execute("""CREATE TABLE IF NOT EXISTS gold_sentiment_price (
-            window_start TIMESTAMPTZ NOT NULL, window_end TIMESTAMPTZ, symbol TEXT NOT NULL,
-            article_count INT, avg_sentiment DOUBLE PRECISION, min_sentiment DOUBLE PRECISION,
-            latest_headline TEXT, latest_sentiment_label TEXT, price_first DOUBLE PRECISION,
-            price_last DOUBLE PRECISION, price_high DOUBLE PRECISION, price_low DOUBLE PRECISION,
-            price_change_pct DOUBLE PRECISION, price_range_pct DOUBLE PRECISION, tick_count BIGINT,
-            day_change_pct DOUBLE PRECISION, alert_flag BOOLEAN, alert_reason TEXT, computed_at TIMESTAMPTZ,
-            PRIMARY KEY (window_start, symbol))""")
+
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS gold_sentiment_price (
+
+                window_start TIMESTAMPTZ NOT NULL,
+                window_end TIMESTAMPTZ,
+                symbol TEXT NOT NULL,
+
+                article_count INT,
+                avg_sentiment DOUBLE PRECISION,
+                min_sentiment DOUBLE PRECISION,
+
+                latest_headline TEXT,
+                latest_sentiment_label TEXT,
+
+                price_first DOUBLE PRECISION,
+                price_last DOUBLE PRECISION,
+                price_high DOUBLE PRECISION,
+                price_low DOUBLE PRECISION,
+
+                price_change_pct DOUBLE PRECISION,
+                price_range_pct DOUBLE PRECISION,
+
+                tick_count BIGINT,
+                day_change_pct DOUBLE PRECISION,
+
+                alert_flag BOOLEAN,
+                alert_reason TEXT,
+
+                computed_at TIMESTAMPTZ,
+
+                PRIMARY KEY (window_start, symbol)
+            )
+            """
+        )
+
         for r in rows:
-            cur.execute(f"INSERT INTO gold_sentiment_price ({','.join(cols)}) VALUES ({','.join(['%s']*len(cols))}) "
-                        f"ON CONFLICT (window_start, symbol) DO UPDATE SET {sets}", [r[c] for c in cols])
+
+            cur.execute(
+                f"""
+                INSERT INTO gold_sentiment_price
+                ({','.join(cols)})
+                VALUES ({','.join(['%s'] * len(cols))})
+
+                ON CONFLICT (window_start, symbol)
+                DO UPDATE SET {sets}
+                """,
+
+                [r[c] for c in cols]
+            )
+
     con.close()
 
 
+# =========================================================
+# START GOLD STREAMING JOB
+# =========================================================
+
 def start_gold(spark, run_id):
-    ticks_raw = read_stream(spark, settings.SILVER_TICKS_PATH, SILVER_TICKS_DDL,
-                            options={"maxFilesPerTrigger": "50"})
-    # The news Silver layer writes Parquet batches (batch_id=... folders) regardless of TABLE_FORMAT.
-    settings.SILVER_NEWS_BY_TICKER_PATH.mkdir(parents=True, exist_ok=True)
-    news_raw = read_stream(spark, settings.SILVER_NEWS_BY_TICKER_PATH, NEWS_BY_TICKER_DDL, fmt="parquet", options={"recursiveFileLookup": "true"})
-    gold = build_gold_stream(ticks_raw, news_raw)
-    totals = {"rows": 0}
+
+    # -----------------------------------------------------
+    # 1. VALIDATE STOCK SILVER PATH
+    # -----------------------------------------------------
+
+    if not settings.SILVER_TICKS_PATH.exists():
+
+        raise FileNotFoundError(
+            f"Stock Silver path not found: "
+            f"{settings.SILVER_TICKS_PATH}"
+        )
+
+    # -----------------------------------------------------
+    # 2. READ STOCK SILVER DELTA
+    # -----------------------------------------------------
+
+    ticks_raw = read_stream(
+        spark,
+
+        settings.SILVER_TICKS_PATH,
+
+        SILVER_TICKS_DDL,
+
+        fmt=settings.SILVER_TICKS_FORMAT,
+
+        options={
+            "maxFilesPerTrigger": "50"
+        }
+    )
+
+    # -----------------------------------------------------
+    # 3. VALIDATE NEWS SILVER PATH
+    # -----------------------------------------------------
+
+    if not settings.SILVER_NEWS_BY_TICKER_PATH.exists():
+
+        raise FileNotFoundError(
+            f"News Silver path not found: "
+            f"{settings.SILVER_NEWS_BY_TICKER_PATH}"
+        )
+
+    # -----------------------------------------------------
+    # 4. READ NEWS SILVER PARQUET
+    # -----------------------------------------------------
+
+    news_raw = read_stream(
+        spark,
+
+        settings.SILVER_NEWS_BY_TICKER_PATH,
+
+        NEWS_BY_TICKER_DDL,
+
+        fmt=settings.SILVER_NEWS_FORMAT,
+
+        options={
+            "recursiveFileLookup": str(
+                settings.SILVER_NEWS_RECURSIVE_LOOKUP
+            ).lower(),
+
+            "maxFilesPerTrigger": "50"
+        }
+    )
+
+    print("\n[GOLD] INPUT CONFIGURATION")
+
+    print(
+        "[GOLD] Stock Silver:",
+        settings.SILVER_TICKS_PATH
+    )
+
+    print(
+        "[GOLD] Stock format:",
+        settings.SILVER_TICKS_FORMAT
+    )
+
+    print(
+        "[GOLD] News Silver:",
+        settings.SILVER_NEWS_BY_TICKER_PATH
+    )
+
+    print(
+        "[GOLD] News format:",
+        settings.SILVER_NEWS_FORMAT
+    )
+
+    print(
+        "[GOLD] News event-time column:",
+        settings.NEWS_TIME_COLUMN
+    )
+
+    print(
+        "[GOLD] Gold output:",
+        settings.GOLD_PATH
+    )
+
+    # -----------------------------------------------------
+    # 5. BUILD GOLD STREAM
+    # -----------------------------------------------------
+
+    gold = build_gold_stream(
+        ticks_raw,
+        news_raw
+    )
+
+    totals = {
+        "rows": 0
+    }
+
+    # -----------------------------------------------------
+    # 6. PROCESS EACH MICRO-BATCH
+    # -----------------------------------------------------
 
     def process(batch_df, batch_id):
+
         batch_df.persist()
+
         try:
-            stats = batch_df.agg(F.count("*").alias("n"), F.min("window_start").alias("a"),
-                                 F.max("window_end").alias("b")).collect()[0]
-            _batch_outputs[batch_id] = (int(stats["n"]), stats["a"], stats["b"])
+
+            stats = batch_df.agg(
+
+                F.count("*").alias("n"),
+
+                F.min(
+                    "window_start"
+                ).alias("a"),
+
+                F.max(
+                    "window_end"
+                ).alias("b")
+
+            ).collect()[0]
+
+            _batch_outputs[batch_id] = (
+                int(stats["n"]),
+                stats["a"],
+                stats["b"]
+            )
+
             if stats["n"] == 0:
                 return
-            write_batch(batch_df, settings.GOLD_PATH, app_id="gold-sentiment-price", batch_id=batch_id)
+
+            # Write Gold output
+            write_batch(
+                batch_df,
+
+                settings.GOLD_PATH,
+
+                app_id="gold-sentiment-price",
+
+                batch_id=batch_id
+            )
+
             totals["rows"] += stats["n"]
+
+            # Optional PostgreSQL copy
             if settings.PG_ENABLED:
+
                 try:
-                    _postgres_upsert([r.asDict() for r in batch_df.collect()])
-                except Exception as error:                  # the optional Postgres copy must never stop Gold
-                    print(f"[GOLD] Postgres upsert skipped: {error}")
-            audit.job_heartbeat(run_id, JOB, totals["rows"])
-            print(f"[GOLD] batch {batch_id}: {stats['n']} window rows ({stats['a']} .. {stats['b']})")
+
+                    _postgres_upsert(
+                        [
+                            r.asDict()
+                            for r in batch_df.collect()
+                        ]
+                    )
+
+                except Exception as error:
+
+                    print(
+                        f"[GOLD] Postgres upsert skipped: {error}"
+                    )
+
+            # Pipeline heartbeat
+            audit.job_heartbeat(
+                run_id,
+                JOB,
+                totals["rows"]
+            )
+
+            print(
+                f"[GOLD] Batch {batch_id}: "
+                f"{stats['n']} window rows "
+                f"({stats['a']} .. {stats['b']})"
+            )
+
         finally:
+
             batch_df.unpersist()
 
-    spark.streams.addListener(GoldProgressAudit(run_id))
-    return (gold.writeStream.queryName(QUERY_NAME).outputMode("append").foreachBatch(process)
-            .option("checkpointLocation", str(settings.CHECKPOINT_DIR / "gold"))
-            .trigger(processingTime=settings.GOLD_TRIGGER).start())
+    # -----------------------------------------------------
+    # 7. REGISTER AUDIT LISTENER
+    # -----------------------------------------------------
+
+    spark.streams.addListener(
+        GoldProgressAudit(run_id)
+    )
+
+    # -----------------------------------------------------
+    # 8. START GOLD STREAM
+    # -----------------------------------------------------
+
+    query = (
+
+        gold.writeStream
+
+        .queryName(QUERY_NAME)
+
+        .outputMode("append")
+
+        .foreachBatch(process)
+
+        .option(
+            "checkpointLocation",
+            str(settings.GOLD_CHECKPOINT_PATH)
+        )
+
+        .trigger(
+            processingTime=settings.GOLD_TRIGGER
+        )
+
+        .start()
+    )
+
+    print("\n[GOLD] Streaming query started successfully.")
+
+    print(
+        "[GOLD] Query ID:",
+        query.id
+    )
+
+    return query
