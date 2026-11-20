@@ -153,7 +153,7 @@ def start_gold(spark, run_id):
                             options={"maxFilesPerTrigger": "50"})
     # The news Silver layer writes Parquet batches (batch_id=... folders) regardless of TABLE_FORMAT.
     settings.SILVER_NEWS_BY_TICKER_PATH.mkdir(parents=True, exist_ok=True)
-    news_raw = read_stream(spark, settings.SILVER_NEWS_BY_TICKER_PATH, NEWS_BY_TICKER_DDL, fmt="parquet")
+    news_raw = read_stream(spark, settings.SILVER_NEWS_BY_TICKER_PATH, NEWS_BY_TICKER_DDL, fmt="parquet", options={"recursiveFileLookup": "true"})
     gold = build_gold_stream(ticks_raw, news_raw)
     totals = {"rows": 0}
 
