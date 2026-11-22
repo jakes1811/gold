@@ -1,179 +1,170 @@
-        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-        at java.base/java.lang.Thread.run(Thread.java:840)
-26/11/20 15:46:34 ERROR Inbox: Ignoring error
-java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
-        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
-        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
-        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
-        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
-        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
-        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
-        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-        at java.base/java.lang.Thread.run(Thread.java:840)
-26/11/20 15:46:34 WARN Executor: Issue communicating with driver in heartbeater
-org.apache.spark.SparkException: Exception thrown in awaitResult: 
-        at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:53)
-        at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:359)
-        at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
-        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:101)
-        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:85)
-        at org.apache.spark.storage.BlockManagerMaster.registerBlockManager(BlockManagerMaster.scala:81)
-        at org.apache.spark.storage.BlockManager.reregister(BlockManager.scala:674)
-        at org.apache.spark.executor.Executor.reportHeartBeat(Executor.scala:1363)
-        at org.apache.spark.executor.Executor.$anonfun$heartbeater$1(Executor.scala:356)
-        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
-        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
-        at org.apache.spark.Heartbeater$$anon$1.run(Heartbeater.scala:46)
-        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-        at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
-        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-        at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
-        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
-        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
-        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
-        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
-        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
-        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
-        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
-        ... 3 more
-26/11/20 15:46:44 ERROR Inbox: Ignoring error
-java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
-        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
-        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
-        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
-        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
-        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
-        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
-        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-        at java.base/java.lang.Thread.run(Thread.java:840)
-26/11/20 15:46:44 WARN Executor: Issue communicating with driver in heartbeater
-org.apache.spark.SparkException: Exception thrown in awaitResult: 
-        at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:53)
-        at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:359)
-        at org.apache.spark.rpc.RpcTimeout.awaitResult(RpcTimeout.scala:75)
-        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:101)
-        at org.apache.spark.rpc.RpcEndpointRef.askSync(RpcEndpointRef.scala:85)
-        at org.apache.spark.storage.BlockManagerMaster.registerBlockManager(BlockManagerMaster.scala:81)
-        at org.apache.spark.storage.BlockManager.reregister(BlockManager.scala:674)
-        at org.apache.spark.executor.Executor.reportHeartBeat(Executor.scala:1363)
-        at org.apache.spark.executor.Executor.$anonfun$heartbeater$1(Executor.scala:356)
-        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
-        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
-        at org.apache.spark.Heartbeater$$anon$1.run(Heartbeater.scala:46)
-        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
-        at java.base/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
-        at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
-        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
-        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
-        at java.base/java.lang.Thread.run(Thread.java:840)
-Caused by: java.lang.NullPointerException: Cannot invoke "org.apache.spark.storage.BlockManagerId.executorId()" because "idWithoutTopologyInfo" is null
-        at org.apache.spark.storage.BlockManagerMasterEndpoint.org$apache$spark$storage$BlockManagerMasterEndpoint$$register(BlockManagerMasterEndpoint.scala:696)
-        at org.apache.spark.storage.BlockManagerMasterEndpoint$$anonfun$receiveAndReply$1.applyOrElse(BlockManagerMasterEndpoint.scala:141)
-        at org.apache.spark.rpc.netty.Inbox.$anonfun$process$1(Inbox.scala:104)
-        at org.apache.spark.rpc.netty.Inbox.safelyCall(Inbox.scala:216)
-        at org.apache.spark.rpc.netty.Inbox.process(Inbox.scala:101)
-        at org.apache.spark.rpc.netty.MessageLoop.org$apache$spark$rpc$netty$MessageLoop$$receiveLoop(MessageLoop.scala:76)
-        at org.apache.spark.rpc.netty.MessageLoop$$anon$1.run(MessageLoop.scala:42)
-        ... 3 more
-                                                                                
-[GOLD] INPUT CONFIGURATION
-[GOLD] Stock Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\Market_ticker\silver\data\stock_silver
-[GOLD] Stock format: delta
-[GOLD] News Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker
-[GOLD] News format: parquet
-[GOLD] News event-time column: ingested_at
-[GOLD] Gold output: C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\gold\sentiment_price
-26/11/20 15:47:28 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
 
-[GOLD] Streaming query started successfully.
-[GOLD] Query ID: 0dde33be-0103-4a79-8e80-efa13709f6e5
-[OK] Gold streaming job started
-[OK] Stock Silver + News Silver connected
-[INFO] Waiting for incoming Silver data...
-[INFO] Press Ctrl+C to stop
-26/11/20 15:47:29 WARN MicroBatchExecution: Disabling AQE since AQE is not supported in stateful workloads.
-26/11/20 15:47:45 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=1, partitionId=2, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:46 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=1, partitionId=3, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:45 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=1, partitionId=1, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/2/2.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=1, partitionId=0, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/1/2.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/2/1.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/0/2.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/3/2.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/3/1.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/1/1.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/1/0/1.snapshot, hence no checksum verification.
-26/11/20 15:47:46 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=2, partitionId=1, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:47 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=2, partitionId=2, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:47 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=2, partitionId=0, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:47 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=2, partitionId=3, storeName=default ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/1/2.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/2/2.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/3/2.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/0/2.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/1/1.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/2/1.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/0/1.snapshot, hence no checksum verification.
-26/11/20 15:47:47 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/2/3/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=1, storeName=left-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/left-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=3, storeName=left-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/left-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/left-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/left-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=1, storeName=left-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=3, storeName=left-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/left-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/left-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/left-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=2, storeName=left-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=1, storeName=right-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/left-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/left-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/left-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:56 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=3, storeName=right-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=2, storeName=left-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/right-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/left-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/right-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/left-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/right-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=2, storeName=right-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/right-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=1, storeName=right-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/right-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=3, storeName=right-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/right-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/1/right-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=0, storeName=left-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/right-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/right-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/3/right-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/left-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=2, storeName=right-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/left-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/right-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/2/right-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=0, storeName=left-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/left-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/left-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=0, storeName=right-keyToNumValues ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/right-keyToNumValues/2.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/right-keyToNumValues/1.snapshot, hence no checksum verification.
-26/11/20 15:47:57 WARN HDFSBackedStateStoreProvider StateStoreProviderId[ storeId=StateStoreId[ operatorId=0, partitionId=0, storeName=right-keyWithIndexToValue ], queryRunId=68429baa-d03c-4c96-b838-c58e7dfc5b5f ]: The state for version 2 doesn't exist in loadedMaps. Reading snapshot file and delta files if needed...Note that this is normal for the first batch of starting query.
-26/11/20 15:47:57 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/right-keyWithIndexToValue/2.snapshot, hence no checksum verification.
-26/11/20 15:47:58 WARN ChecksumCheckpointFileManager: No checksum file found for file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/data/checkpoints/gold/state/0/0/right-keyWithIndexToValue/1.snapshot, hence no checksum verification.
-26/11/20 15:48:20 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 10000 milliseconds, but spent 50588 milliseconds
-26/11/20 15:48:52 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 10000 milliseconds, but spent 32760 milliseconds
-26/11/20 15:49:15 WARN ProcessingTimeExecutor: Current batch is falling behind. The trigger interval is 10000 milliseconds, but spent 22946 milliseconds
+==========================================================================================
+                 FINTEL NEWS INGESTION CYCLE
+==========================================================================================
 
+[TIMER START] Buffer Replay
+
+========== BUFFER REPLAY ==========
+No pending articles.
+[TIMER END] Buffer Replay | Duration: 0.004s | Status: success
+
+[TIMER START] RSS News Search
+
+MODE: INCREMENTAL SEARCH
+
+
+
+####################################################################################################
+                 FINTEL INCREMENTAL NEWS SEARCH
+####################################################################################################
+
+COMPANY 1/13: RELIANCE
+RSS candidates retrieved: 39
+Articles newer than checkpoint: 2
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 2/13: TCS
+RSS candidates retrieved: 24
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 3/13: INFY
+RSS candidates retrieved: 27
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 4/13: HDFCBANK
+RSS candidates retrieved: 49
+Articles newer than checkpoint: 2
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 5/13: ICICIBANK
+RSS candidates retrieved: 39
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 6/13: TATASTEEL
+RSS candidates retrieved: 27
+Articles newer than checkpoint: 14
+
+----------------------------------------------------------------------------------------------------
+                 SELECTED LATEST VALID FINANCIAL NEWS
+----------------------------------------------------------------------------------------------------
+
+Company       : Tata Steel
+Symbol        : TATASTEEL
+Headline      : APL Apollo To Buy Tata Steel's Tubes And Colors Business For Rs 28,000 Crore - NDTV Profit
+Publisher     : NDTV Profit
+Retrieved Via : Google News RSS
+Published     : Sun, 22 Nov 2026 15:01:57 GMT
+Published UTC : 2026-11-22T15:01:57+00:00
+Article URL   : https://news.google.com/rss/articles/CBMivAFBVV95cUxOdDVaWlJDOXR2alZoSGQ3T0NkcDRhaDkyTi1fTGJ0T0VIZ2VuUzdETXpsNEpqSUU4MUlvZjVVeHdTZEFyalgyS1R2YlVEdWJhbllZeVU2SndyNm9LRUQ2RHdpR3VDYzBQWDFmblZUNk0yall0Q1pqajFicFJGXzgzWnZoY3kzNm5pOW5tUDFLdmxzTjB3YUFIaFdnQTlZdFNXTHI0ckxSWjlsb2RTQUVYX1YtMlhRVlFqRDdfM9IBxAFBVV95cUxPeTV0Q01FdVQyTTB1VWtMV28wcTh6Q0dXYVR4VzlVNGctblBTTFNPM1NfYnpzT3YwWVVxNDV6OHlWUFN4RjI3ZjVXQzU5RzQ1LUdxVGlhd3RMeXpFZmlmYXBsaHlWal8xYm5GWXNlYUVSWXU4WF9OSWN4YktqR3Jvamc0U3lIZWFKTGNCbGVrSjRqUGhid1RfUFBsVkNObUd3Y2hNT19SYXpGTzZ4bXU0MnRxcXo1TDhUdG5ILU81Zm1KZ05S?oc=5
+
+Description   : <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxOdDVaWlJDOXR2alZoSGQ3T0NkcDRhaDkyTi1fTGJ0T0VIZ2VuUzdETXpsNEpqSUU4MUlvZjVVeHdTZEFyalgyS1R2YlVEdWJhbllZeVU2SndyNm9LRUQ2RHdpR3VDYzBQWDFmblZUNk0yall0Q1pqajFicFJGXzgzWnZoY3kzNm5pOW5tUDFLdmxzTjB3YUFIaFdnQTlZdFNXTHI0ckxSWjlsb2RTQUVYX1YtMlhRVlFqRDdfM9IBxAFBVV95cUxPeTV0Q01FdVQyTTB1VWtMV28wcTh6Q0dXYVR4VzlVNGctblBTTFNPM1NfYnpzT3YwWVVxNDV6OHlWUFN4RjI3ZjVXQzU5RzQ1LUdxVGlhd3RMeXpFZmlmYXBsaHlWal8xYm5GWXNlYUVSWXU4WF9OSWN4YktqR3Jvamc0U3lIZWFKTGNCbGVrSjRqUGhid1RfUFBsVkNObUd3Y2hNT19SYXpGTzZ4bXU0MnRxcXo1TDhUdG5ILU81Zm1KZ05S?oc=5" target="_blank">APL Apollo To Buy Tata Steel's Tubes And Colors Business For Rs 28,000 Crore</a>&nbsp;&nbsp;<font color="#6f6f6f">NDTV Profit</font>
+
+News Category : financial_performance
+Quality Score : 5
+Filter Status : ACCEPTED
+Reason        : Meaningful financial news signals identified
+----------------------------------------------------------------------------------------------------
+STATUS : NEW VALID ARTICLE FOUND
+
+COMPANY 7/13: SBIN
+RSS candidates retrieved: 35
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 8/13: ITC
+RSS candidates retrieved: 15
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 9/13: SUNPHARMA
+RSS candidates retrieved: 32
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 10/13: BHARTIARTL
+RSS candidates retrieved: 45
+Articles newer than checkpoint: 0
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 11/13: ADANIENT
+RSS candidates retrieved: 37
+Articles newer than checkpoint: 1
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+COMPANY 12/13: COALINDIA
+RSS candidates retrieved: 66
+Articles newer than checkpoint: 5
+
+----------------------------------------------------------------------------------------------------
+                 SELECTED LATEST VALID FINANCIAL NEWS
+----------------------------------------------------------------------------------------------------
+
+Company       : Coal India
+Symbol        : COALINDIA
+Headline      : Coal India receives Rs 1200 crore LoI from Ministry of Heavy Industries for Rare Earth Magnet Project - scanx.trade
+Publisher     : scanx.trade
+Retrieved Via : Google News RSS
+Published     : Fri, 20 Nov 2026 21:28:34 GMT
+Published UTC : 2026-11-20T21:28:34+00:00
+Article URL   : https://news.google.com/rss/articles/CBMiwwFBVV95cUxOMnVEUWJUS05sbzVuRU9tVmFreDBKbHZzSkcyeHpXcVZkRjF4dEtnSXA0bDNoRHMyQUNhTU52SmxyV2dmTExzYXFFU1M3MGdoODBPYm15d0hyTXVqbDZ2TEpINFp0OGlsVk44TFVFNDVHOFBhbnhMTThHc1BZMWsycW5YSWtJTVdjY0xreWF4bmxHNU5ZT2t6enY1YS1yUHJHRUt1c1FGbVZ4MzNfTTU4RXlLZWRNTGFHcDFKaFY3aGYzSHc?oc=5
+
+Description   : <a href="https://news.google.com/rss/articles/CBMiwwFBVV95cUxOMnVEUWJUS05sbzVuRU9tVmFreDBKbHZzSkcyeHpXcVZkRjF4dEtnSXA0bDNoRHMyQUNhTU52SmxyV2dmTExzYXFFU1M3MGdoODBPYm15d0hyTXVqbDZ2TEpINFp0OGlsVk44TFVFNDVHOFBhbnhMTThHc1BZMWsycW5YSWtJTVdjY0xreWF4bmxHNU5ZT2t6enY1YS1yUHJHRUt1c1FGbVZ4MzNfTTU4RXlLZWRNTGFHcDFKaFY3aGYzSHc?oc=5" target="_blank">Coal India receives Rs 1200 crore LoI from Ministry of Heavy Industries for Rare Earth Magnet Project</a>&nbsp;&nbsp;<font color="#6f6f6f">scanx.trade</font>
+
+News Category : business_developments, sector_developments
+Quality Score : 7
+Filter Status : ACCEPTED
+Reason        : Meaningful financial news signals identified
+----------------------------------------------------------------------------------------------------
+STATUS : NEW VALID ARTICLE FOUND
+
+COMPANY 13/13: BAJFINANCE
+RSS candidates retrieved: 37
+Articles newer than checkpoint: 1
+STATUS : NO NEW VALID NEWS
+Existing latest-news record remains unchanged.
+
+
+
+####################################################################################################
+                 INCREMENTAL SEARCH SUMMARY
+####################################################################################################
+Companies Configured : 13
+Successful Searches  : 13
+New Valid Articles   : 2
+####################################################################################################
+[TIMER END] RSS News Search | Duration: 21.937s | Status: success
+
+========== SEARCH RESULTS ==========
+Articles selected: 2
+Successful companies: 13
+
+[TIMER START] Article Processing and Publishing
+[NO NEW NEWS] RELIANCE | Checkpoint updated.
+[NO NEW NEWS] TCS | Checkpoint updated.
+[NO NEW NEWS] INFY | Checkpoint updated.
+[NO NEW NEWS] HDFCBANK | Checkpoint updated.
+[NO NEW NEWS] ICICIBANK | Checkpoint updated.
+Published: 6e531a79a4b54d65abc6a0686211b7e17bbf3a074d72e5eb3a9e9db0c48008ea | Partition: 2 | Offset: 2
+[STATE UPDATED] TATASTEEL | APL Apollo To Buy Tata Steel's Tubes And Colors Business For Rs 28,000 Crore - NDTV Profit
+[NO NEW NEWS] SBIN | Checkpoint updated.
+[NO NEW NEWS] ITC | Checkpoint updated.
+[NO NEW NEWS] SUNPHARMA | Checkpoint updated.
+[NO NEW NEWS] BHARTIARTL | Checkpoint updated.
+[TIMER END] Article Processing and Publishing | Duration: 0.541s | Status: failed
+[CYCLE ERROR] [WinError 5] Access is denied: 'C:\\Users\\2000209445\\Desktop\\FINTEL_UPDATE\\news_bronze\\shared_data\\producer_state\\news_checkpoint.json.tmp' -> 'C:\\Users\\2000209445\\Desktop\\FINTEL_UPDATE\\news_bronze\\shared_data\\producer_state\\news_checkpoint.json'
+
+Next ingestion cycle in 900 seconds.
