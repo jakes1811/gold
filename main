@@ -1,0 +1,79 @@
+
+import os
+
+# Local Spark configuration for Windows
+os.environ["SPARK_LOCAL_IP"] = "127.0.0.1"
+os.environ["HADOOP_HOME"] = r"C:\hadoop"
+os.environ["hadoop.home.dir"] = r"C:\hadoop"
+
+from pyspark.sql import SparkSession
+from delta import configure_spark_with_delta_pip
+
+from config import settings
+from common import audit
+from gold.gold_job import start_gold
+
+
+def main():
+    print("\n========== FINTEL GOLD STARTING ==========\n")
+
+    builder = (
+        SparkSession.builder
+        .appName("FinTel-Gold-Integration")
+        .master(settings.SPARK_MASTER)
+        .config(
+            "spark.sql.extensions",
+            "io.delta.sql.DeltaSparkSessionExtension"
+        )
+        .config(
+            "spark.sql.catalog.spark_catalog",
+            "org.apache.spark.sql.delta.catalog.DeltaCatalog"
+        )
+        .config("spark.driver.memory", settings.SPARK_DRIVER_MEMORY)
+        .config("spark.sql.shuffle.partitions", "4")
+        .config("spark.driver.host", "127.0.0.1")
+        .config("spark.driver.bindAddress", "127.0.0.1")
+    )
+
+    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+    spark.sparkContext.setLogLevel("WARN")
+
+    run_id = audit.new_run_id()
+    audit.job_start(run_id, "gold_job")
+
+    query = None
+
+    try:
+        query = start_gold(spark, run_id)
+
+        print("[OK] Gold streaming job started")
+        print("[OK] Stock Silver + News Silver connected")
+        print("[INFO] Waiting for incoming Silver data...")
+        print("[INFO] Press Ctrl+C to stop")
+
+        query.awaitTermination()
+
+    except KeyboardInterrupt:
+        print("\n[INFO] Stopping Gold pipeline...")
+
+    except Exception as error:
+        audit.job_end(
+            run_id,
+            "gold_job",
+            status="FAILED",
+            last_error=str(error)
+        )
+        raise
+
+    finally:
+        if query is not None and query.isActive:
+            query.stop()
+
+        audit.job_end(run_id, "gold_job", status="STOPPED")
+        spark.stop()
+
+        print("[INFO] Gold pipeline stopped")
+
+
+if __name__ == "__main__":
+    main()
