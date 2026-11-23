@@ -1,0 +1,95 @@
+
+import os
+from pathlib import Path
+
+import psycopg
+from dotenv import load_dotenv
+
+
+# Load the project-root .env file
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+
+def get_connection():
+    """
+    Create and return a PostgreSQL connection
+    using credentials from the root .env file.
+    """
+
+    required_variables = [
+        "FINTEL_PG_HOST",
+        "FINTEL_PG_DB",
+        "FINTEL_PG_USER",
+        "FINTEL_PG_PASSWORD",
+    ]
+
+    missing = [
+        variable
+        for variable in required_variables
+        if not os.getenv(variable)
+    ]
+
+    if missing:
+        raise ValueError(
+            f"Missing PostgreSQL environment variables: {missing}"
+        )
+
+    return psycopg.connect(
+        host=os.getenv("FINTEL_PG_HOST", "localhost"),
+        port=int(os.getenv("FINTEL_PG_PORT", "5432")),
+        dbname=os.getenv("FINTEL_PG_DB"),
+        user=os.getenv("FINTEL_PG_USER"),
+        password=os.getenv("FINTEL_PG_PASSWORD"),
+        connect_timeout=10,
+    )
+
+
+def test_connection():
+    """Test PostgreSQL connectivity and verify Gold tables."""
+
+    schema = os.getenv("FINTEL_PG_SCHEMA", "fintel_gold")
+
+    expected_tables = {
+        "gold_alerts",
+        "gold_audit",
+        "gold_news_sentiment",
+        "gold_sentiment_price",
+        "gold_stock_metrics",
+    }
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT current_database(), current_user")
+            database, user = cur.fetchone()
+
+            cur.execute(
+                """
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema = %s
+                  AND table_type = 'BASE TABLE'
+                ORDER BY table_name
+                """,
+                (schema,),
+            )
+
+            tables = {row[0] for row in cur.fetchall()}
+
+    print("PostgreSQL connection: SUCCESS")
+    print(f"Database: {database}")
+    print(f"User: {user}")
+    print(f"Schema: {schema}")
+
+    print("\nGold tables:")
+    for table in sorted(tables):
+        print(f"  - {table}")
+
+    missing_tables = expected_tables - tables
+
+    if missing_tables:
+        print(f"\nMissing tables: {sorted(missing_tables)}")
+        return False
+
+    print("\nAll five Gold tables verified!")
+    return True
