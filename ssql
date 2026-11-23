@@ -1,0 +1,139 @@
+
+-- ==========================================
+-- FinTel Gold v4 - PostgreSQL Database Setup
+-- ==========================================
+
+CREATE SCHEMA IF NOT EXISTS fintel_gold;
+
+-- 1. Stock window metrics
+CREATE TABLE IF NOT EXISTS fintel_gold.gold_stock_metrics (
+    symbol              VARCHAR(30) NOT NULL,
+    window_start        TIMESTAMPTZ NOT NULL,
+    window_end          TIMESTAMPTZ NOT NULL,
+
+    price_first         DOUBLE PRECISION,
+    price_last          DOUBLE PRECISION,
+    price_high          DOUBLE PRECISION,
+    price_low           DOUBLE PRECISION,
+
+    price_change_pct    DOUBLE PRECISION,
+    price_range_pct     DOUBLE PRECISION,
+    day_change_pct      DOUBLE PRECISION,
+    tick_count          BIGINT NOT NULL DEFAULT 0,
+
+    computed_at         TIMESTAMPTZ DEFAULT NOW(),
+
+    PRIMARY KEY (symbol, window_start)
+);
+
+-- 2. News sentiment records
+-- One article can map to multiple companies.
+CREATE TABLE IF NOT EXISTS fintel_gold.gold_news_sentiment (
+    article_id          TEXT NOT NULL,
+    symbol              VARCHAR(30) NOT NULL,
+
+    headline            TEXT,
+    source              TEXT,
+    published_at        TIMESTAMPTZ,
+
+    sentiment           VARCHAR(30),
+    sentiment_score     DOUBLE PRECISION,
+    positive_score      DOUBLE PRECISION,
+    negative_score      DOUBLE PRECISION,
+    neutral_score       DOUBLE PRECISION,
+
+    processed_at        TIMESTAMPTZ DEFAULT NOW(),
+
+    PRIMARY KEY (article_id, symbol)
+);
+
+-- 3. Integrated stock + news results
+CREATE TABLE IF NOT EXISTS fintel_gold.gold_sentiment_price (
+    symbol                  VARCHAR(30) NOT NULL,
+    window_start            TIMESTAMPTZ NOT NULL,
+    window_end              TIMESTAMPTZ NOT NULL,
+
+    article_count           INTEGER DEFAULT 0,
+    avg_sentiment           DOUBLE PRECISION,
+    min_sentiment           DOUBLE PRECISION,
+    latest_headline         TEXT,
+    latest_sentiment_label  VARCHAR(30),
+    latest_news_time        TIMESTAMPTZ,
+
+    price_first             DOUBLE PRECISION,
+    price_last              DOUBLE PRECISION,
+    price_high              DOUBLE PRECISION,
+    price_low               DOUBLE PRECISION,
+
+    price_change_pct        DOUBLE PRECISION,
+    price_range_pct         DOUBLE PRECISION,
+    day_change_pct           DOUBLE PRECISION,
+    tick_count              BIGINT DEFAULT 0,
+
+    alert_flag              BOOLEAN DEFAULT FALSE,
+    alert_reason            TEXT,
+
+    computed_at             TIMESTAMPTZ DEFAULT NOW(),
+
+    PRIMARY KEY (symbol, window_start)
+);
+
+-- 4. Financial alerts
+CREATE TABLE IF NOT EXISTS fintel_gold.gold_alerts (
+    alert_id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    symbol              VARCHAR(30) NOT NULL,
+    window_start        TIMESTAMPTZ NOT NULL,
+
+    alert_type          VARCHAR(50) NOT NULL,
+    alert_message       TEXT,
+    sentiment_score     DOUBLE PRECISION,
+    price_change_pct    DOUBLE PRECISION,
+
+    created_at          TIMESTAMPTZ DEFAULT NOW(),
+
+    UNIQUE (symbol, window_start, alert_type)
+);
+
+-- 5. Gold processing audit
+CREATE TABLE IF NOT EXISTS fintel_gold.gold_audit (
+    audit_id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    run_id              VARCHAR(100) NOT NULL,
+    batch_id            BIGINT,
+
+    job_name            VARCHAR(100),
+    status              VARCHAR(30),
+
+    input_tick_count    BIGINT DEFAULT 0,
+    input_news_count    BIGINT DEFAULT 0,
+    output_row_count    BIGINT DEFAULT 0,
+    rows_with_news      BIGINT DEFAULT 0,
+    late_records        BIGINT DEFAULT 0,
+
+    started_at          TIMESTAMPTZ,
+    completed_at        TIMESTAMPTZ DEFAULT NOW(),
+    duration_ms         BIGINT,
+    error_message       TEXT,
+
+    UNIQUE (run_id, batch_id)
+);
+
+-- ==========================================
+-- Indexes for dashboard and pipeline queries
+-- ==========================================
+
+CREATE INDEX IF NOT EXISTS idx_stock_symbol_window
+ON fintel_gold.gold_stock_metrics (symbol, window_start DESC);
+
+CREATE INDEX IF NOT EXISTS idx_news_symbol_published
+ON fintel_gold.gold_news_sentiment (symbol, published_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_integrated_symbol_window
+ON fintel_gold.gold_sentiment_price (symbol, window_start DESC);
+
+CREATE INDEX IF NOT EXISTS idx_alerts_symbol_created
+ON fintel_gold.gold_alerts (symbol, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_audit_run
+ON fintel_gold.gold_audit (run_id);
+
+-- Setup completed
