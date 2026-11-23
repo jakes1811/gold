@@ -1,0 +1,295 @@
+
+import re
+
+from config.companies import COMPANIES
+
+
+# ============================================================
+# SHORT NAME CONTEXT
+# ============================================================
+
+# Short names can refer to unrelated entities.
+# Require supporting company/financial context.
+
+SHORT_NAME_CONTEXT = {
+
+    "TCS": [
+        "tata consultancy services",
+        "shares",
+        "stock",
+        "earnings",
+        "revenue",
+        "results",
+        "quarter",
+        "company",
+        "services",
+        "information technology",
+        "it services",
+        "market",
+        "profit",
+        "investment",
+        "technology",
+        "digital",
+        "clients",
+        "contracts"
+    ],
+
+    "SBI": [
+        "state bank of india",
+        "sbi bank",
+        "shares",
+        "stock",
+        "banking",
+        "earnings",
+        "results",
+        "market",
+        "lending",
+        "deposits",
+        "loans",
+        "credit",
+        "financial",
+        "bank",
+        "rbi"
+    ],
+
+    "ITC": [
+        "itc limited",
+        "itc ltd",
+        "shares",
+        "stock",
+        "hotels",
+        "cigarettes",
+        "fmcg",
+        "earnings",
+        "results",
+        "market",
+        "consumer goods",
+        "foods",
+        "agribusiness",
+        "dividend",
+        "company"
+    ],
+
+    "Airtel": [
+        "bharti airtel",
+        "telecom",
+        "telecommunications",
+        "mobile network",
+        "5g",
+        "4g",
+        "broadband",
+        "subscribers",
+        "revenue",
+        "shares",
+        "stock",
+        "telecom sector",
+        "tariff",
+        "arpu"
+    ]
+}
+
+
+# ============================================================
+# ADDITIONAL ALIASES
+# ============================================================
+
+# Some commonly used short names are intentionally added
+# here rather than changing the existing companies.py file.
+
+ADDITIONAL_ALIASES = {
+
+    "ITC": [
+        "ITC"
+    ]
+
+}
+
+
+# ============================================================
+# EXCLUDED ENTITIES
+# ============================================================
+
+# These entities must not be confused with the target
+# company State Bank of India (SBIN).
+
+EXCLUDED_PATTERNS = {
+
+    "SBIN": [
+        r"\bSBI\s+Life\b",
+        r"\bSBI\s+General\b",
+        r"\bSBI\s+Mutual\s+Fund\b",
+        r"\bSBI\s+Cards?\b",
+        r"\bSBI\s+Securities\b",
+        r"\bSBI\s+Funds?\s+Management\b"
+    ]
+
+}
+
+
+# ============================================================
+# TEXT MATCHING
+# ============================================================
+
+def contains_alias(text, alias):
+    """
+    Match complete aliases instead of partial words.
+
+    Example:
+    'TCS' matches 'TCS shares'.
+    'TCS' does not match an unrelated longer word.
+    """
+
+    if not text or not alias:
+        return False
+
+    pattern = (
+        r"(?<!\w)"
+        + re.escape(alias)
+        + r"(?!\w)"
+    )
+
+    return re.search(
+        pattern,
+        text,
+        re.IGNORECASE
+    ) is not None
+
+
+# ============================================================
+# EXCLUDED ENTITY CHECK
+# ============================================================
+
+def has_excluded_entity(text, symbol):
+    """
+    Check whether the text refers to a separate entity.
+    """
+
+    patterns = EXCLUDED_PATTERNS.get(symbol, [])
+
+    return any(
+        re.search(pattern, text, re.IGNORECASE)
+        for pattern in patterns
+    )
+
+
+# ============================================================
+# SHORT NAME CONTEXT CHECK
+# ============================================================
+
+def has_short_name_context(text, alias):
+    """
+    Require contextual evidence for ambiguous short names.
+
+    Long company names do not require additional context.
+    """
+
+    context_words = SHORT_NAME_CONTEXT.get(alias)
+
+    if not context_words:
+        return True
+
+    return any(
+        contains_alias(text, word)
+        for word in context_words
+    )
+
+
+# ============================================================
+# COMPANY ALIAS RETRIEVAL
+# ============================================================
+
+def get_company_aliases(symbol, details):
+    """
+    Retrieve configured aliases and additional aliases.
+    """
+
+    aliases = list(details.get("aliases", []))
+
+    extra_aliases = ADDITIONAL_ALIASES.get(symbol, [])
+
+    for alias in extra_aliases:
+
+        if alias not in aliases:
+            aliases.append(alias)
+
+    return aliases
+
+
+# ============================================================
+# COMPANY MATCHING
+# ============================================================
+
+def find_matching_companies(headline, full_text=""):
+    """
+    Identify all target companies mentioned in an article.
+
+    Checks headline and description separately.
+
+    Returns:
+        List of matching NSE symbols.
+    """
+
+    headline = headline or ""
+    full_text = full_text or ""
+
+    combined_text = f"{headline} {full_text}"
+
+    matches = []
+
+    for symbol, details in COMPANIES.items():
+
+        aliases = get_company_aliases(
+            symbol,
+            details
+        )
+
+        # Reject separate entities.
+        # Check both headline and description.
+        if has_excluded_entity(combined_text, symbol):
+            continue
+
+        company_match = False
+
+        for alias in aliases:
+
+            # --------------------------------------------
+            # Check headline
+            # --------------------------------------------
+
+            if contains_alias(headline, alias):
+
+                if has_short_name_context(headline, alias):
+                    company_match = True
+                    break
+
+            # --------------------------------------------
+            # Check description
+            # --------------------------------------------
+
+            if contains_alias(full_text, alias):
+
+                if has_short_name_context(full_text, alias):
+                    company_match = True
+                    break
+
+        if company_match:
+            matches.append(symbol)
+
+    return matches
+
+
+# ============================================================
+# SIMPLE PUBLIC INTERFACE
+# ============================================================
+
+def is_relevant_article(headline, full_text=""):
+    """
+    Return True if at least one target company is identified.
+    """
+
+    return bool(
+        find_matching_companies(
+            headline,
+            full_text
+        )
+    )
