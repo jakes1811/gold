@@ -1,0 +1,839 @@
+
+import re
+import html
+
+from dataclasses import dataclass
+from typing import Optional
+
+
+# ============================================================
+# TEXT CLEANING
+# ============================================================
+
+def clean_text(value: Optional[str]) -> str:
+    """Remove HTML tags and normalize text."""
+
+    if not value:
+        return ""
+
+    value = html.unescape(str(value))
+    value = re.sub(r"<[^>]+>", " ", value)
+    value = re.sub(r"\s+", " ", value)
+
+    return value.strip()
+
+
+# ============================================================
+# PROMOTIONAL / ADVERTISEMENT DETECTION
+# ============================================================
+
+PROMOTIONAL_PATTERNS = [
+
+    # Explicit advertisements
+    r"\bsponsored content\b",
+    r"\bpaid promotion\b",
+    r"\bpromoted content\b",
+    r"\badvertisement\b",
+    r"\badvertorial\b",
+    r"\bpartner content\b",
+    r"\bbrand promotion\b",
+    r"\bpaid partnership\b",
+    r"\bcommercial promotion\b",
+
+    # Trading platform advertisements
+    r"\bopen a demat account\b",
+    r"\bopen trading account\b",
+    r"\bdownload our trading app\b",
+    r"\bregister now\b",
+    r"\bsign up now\b",
+    r"\bsubscribe now\b",
+    r"\bclick here to invest\b",
+    r"\bstart trading today\b",
+    r"\bget started with our platform\b",
+    r"\baccount opening offer\b",
+    r"\bexclusive offer\b",
+    r"\bbrokerage charges\b",
+    r"\bpricing plan overview\b",
+
+    # Stock-picking promotional content
+    r"\bstocks to watch\b",
+    r"\bstock to watch\b",
+    r"\btop stocks to watch\b",
+    r"\bstocks to buy\b",
+    r"\bbest stocks to buy\b",
+    r"\btop stocks to buy\b",
+    r"\btop stock picks\b",
+    r"\bbest stock picks\b",
+    r"\bmultibagger stocks\b",
+    r"\bnext multibagger\b",
+    r"\bprofit making stocks\b",
+    r"\bhot stock picks\b",
+    r"\btop investment picks\b",
+
+    # Promotional performance claims
+    r"\bguaranteed profit\b",
+    r"\bguaranteed returns\b",
+    r"\brisk free investment\b",
+    r"\brisk-free investment\b",
+    r"\bdouble your money\b",
+    r"\bmultibagger returns\b",
+    r"\bhigh return opportunities\b",
+    r"\bwealth creation tips\b",
+    r"\bmake money with stocks\b",
+
+    # Investment marketing
+    r"\bbest investment opportunities\b",
+    r"\bwhere to invest now\b",
+    r"\binvest now\b",
+    r"\bstart investing today\b",
+    r"\bexclusive investment opportunity\b",
+
+    # Trading courses and services
+    r"\bfree stock tips\b",
+    r"\bpremium stock tips\b",
+    r"\bjoin our trading group\b",
+    r"\btrading signals\b",
+    r"\bstock market course\b",
+    r"\blearn stock trading\b",
+    r"\btrading academy\b",
+    r"\bstock market training\b",
+
+    # Subscription and affiliate promotions
+    r"\bsubscribe for stock tips\b",
+    r"\bsubscribe to our newsletter\b",
+    r"\bjoin our premium membership\b",
+    r"\bregister for free webinar\b",
+    r"\bsign up through our link\b",
+    r"\bdownload our app\b",
+]
+
+
+# ============================================================
+# LOW-VALUE GENERIC MARKET ROUNDUPS
+# ============================================================
+
+GENERIC_ROUNDUP_PATTERNS = [
+
+    r"\bstocks? in news\b",
+    r"\btop stocks? to buy today\b",
+    r"\bstocks? to watch today\b",
+    r"\bmarket live updates\b",
+    r"\btop gainers and losers\b",
+    r"\bmarket movers today\b",
+    r"\bpre-market updates\b",
+    r"\bclosing bell updates\b",
+    r"\btop stocks? for tomorrow\b",
+    r"\bstocks? likely to outperform\b",
+    r"\bstocks? that could perform well\b",
+    r"\bbest stocks? for investment\b",
+    r"\bshares? to watch this week\b",
+]
+
+
+# ============================================================
+# FINANCIAL NEWS CATEGORIES
+# ============================================================
+
+FINANCIAL_CATEGORIES = {
+
+    # --------------------------------------------------------
+    # 1. FINANCIAL PERFORMANCE
+    # --------------------------------------------------------
+
+    "financial_performance": [
+
+        "quarterly results",
+        "financial results",
+        "annual results",
+        "quarterly earnings",
+        "annual earnings",
+        "revenue growth",
+        "revenue declined",
+        "revenue increased",
+        "revenue rose",
+        "revenue fell",
+        "net profit",
+        "net loss",
+        "operating profit",
+        "operating margin",
+        "ebitda",
+        "cash flow",
+        "debt",
+        "profit growth",
+        "profit decline",
+        "earnings growth",
+        "earnings decline",
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "quarter",
+        "quarterly",
+        "profit",
+        "profits",
+        "earnings",
+        "revenue",
+        "sales growth",
+        "financial performance",
+        "record profit",
+        "margin",
+        "losses",
+        "net interest margin",
+        "gross profit",
+        "operating income",
+        "net interest income",
+        "bad loans",
+        "non performing assets",
+        "npa",
+        "provisioning",
+        "impairment",
+        "earnings guidance",
+        "profitability",
+        "dividend income",
+    ],
+
+    # --------------------------------------------------------
+    # 2. BUSINESS DEVELOPMENTS
+    # --------------------------------------------------------
+
+    "business_developments": [
+
+        "major contract",
+        "order win",
+        "new project",
+        "business expansion",
+        "capacity expansion",
+        "new investment",
+        "capital expenditure",
+        "capex",
+        "acquisition",
+        "merger",
+        "partnership",
+        "strategic agreement",
+        "joint venture",
+        "production increase",
+        "production shutdown",
+        "market share",
+        "new facility",
+        "agreement",
+        "sign agreement",
+        "digital revenue collection",
+        "hydrogen production",
+        "hydrogen project",
+        "join forces",
+        "strategic partnership",
+        "capacity",
+        "annual capacity",
+        "steelmaking capacity",
+        "expansion",
+        "project",
+        "investment",
+        "financing",
+        "loan",
+        "funding",
+        "consortium",
+        "bidder",
+        "rare earth",
+        "magnet plant",
+        "new plant",
+        "facility",
+        "business restructuring",
+        "business acquisition",
+        "strategic investment",
+        "new business",
+        "commercial operations",
+        "letter of intent",
+        "memorandum of understanding",
+        "mou",
+        "supply agreement",
+        "export order",
+        "international expansion",
+        "new market entry",
+    ],
+
+    # --------------------------------------------------------
+    # 3. CORPORATE ACTIONS
+    # --------------------------------------------------------
+
+    "corporate_actions": [
+
+        "dividend",
+        "share buyback",
+        "buyback",
+        "bonus shares",
+        "stock split",
+        "rights issue",
+        "fundraising",
+        "fund raising",
+        "fund raise",
+        "qualified institutional placement",
+        "qip",
+        "demerger",
+        "share allotment",
+        "ipo",
+        "initial public offering",
+        "preferential allotment",
+        "bonus issue",
+        "share repurchase",
+        "capital reduction",
+        "record date",
+        "shareholder approval",
+        "equity issuance",
+        "preferential issue",
+    ],
+
+    # --------------------------------------------------------
+    # 4. REGULATORY AND LEGAL
+    # --------------------------------------------------------
+
+    "regulatory_legal": [
+
+        "regulatory action",
+        "regulatory approval",
+        "sebi",
+        "rbi",
+        "penalty",
+        "investigation",
+        "court ruling",
+        "legal dispute",
+        "tax dispute",
+        "compliance",
+        "gstat",
+        "government approval",
+        "show cause notice",
+        "approval",
+        "court",
+        "tax",
+        "usfda",
+        "fda approval",
+        "environmental clearance",
+        "antitrust",
+        "competition commission",
+        "cci",
+        "regulatory filing",
+        "regulatory violation",
+        "enforcement action",
+        "government order",
+        "licence approval",
+        "license approval",
+        "trading restriction",
+        "insolvency proceedings",
+    ],
+
+    # --------------------------------------------------------
+    # 5. ANALYST RECOMMENDATIONS
+    # --------------------------------------------------------
+
+    "analyst_recommendations": [
+
+        "analyst recommendation",
+        "brokerage recommendation",
+        "brokerages remain bullish",
+        "brokerage remains bullish",
+        "brokerage upgrade",
+        "brokerage downgrade",
+        "upgraded to buy",
+        "downgraded to sell",
+        "buy rating",
+        "sell rating",
+        "hold rating",
+        "target price",
+        "price target",
+        "revised target",
+        "analyst rating",
+        "jefferies",
+        "morgan stanley",
+        "goldman sachs",
+        "institutional investors",
+        "fpi investment",
+        "fii investment",
+        "brokerage",
+        "brokerages",
+        "analyst",
+        "upside",
+        "target",
+        "rating",
+        "motilal",
+        "nomura",
+        "jpmorgan",
+        "jp morgan",
+        "citi research",
+        "credit suisse",
+        "maintains buy",
+        "maintains sell",
+        "maintains hold",
+        "price target revised",
+        "earnings estimate",
+        "analyst coverage",
+    ],
+
+    # --------------------------------------------------------
+    # 6. STOCK MARKET COMMENTARY
+    # --------------------------------------------------------
+
+    "stock_market_commentary": [
+
+        "shares rise",
+        "shares fall",
+        "stock rises",
+        "stock falls",
+        "share price",
+        "stock price",
+        "market valuation",
+        "market capitalization",
+        "market capitalisation",
+        "bullish outlook",
+        "bearish outlook",
+        "trading volume",
+        "52 week high",
+        "52-week high",
+        "52 week low",
+        "52-week low",
+        "outperforms the market",
+        "underperforms the market",
+        "stock rally",
+        "stock correction",
+        "investor sentiment",
+        "rises",
+        "falls",
+        "soars",
+        "gains",
+        "declines",
+        "stock movement",
+        "share movement",
+        "market movement",
+        "trading session",
+        "straight session",
+        "market capitalization",
+        "intraday trading",
+        "shareholders wealth",
+        "market valuation",
+        "equity market",
+        "stock exchange",
+    ],
+
+    # --------------------------------------------------------
+    # 7. SECTOR DEVELOPMENTS
+    # --------------------------------------------------------
+
+    "sector_developments": [
+
+        "sector outlook",
+        "industry outlook",
+        "industry regulation",
+        "sector regulation",
+        "tariff changes",
+        "commodity prices",
+        "interest rate changes",
+        "policy changes",
+        "import duty",
+        "export duty",
+        "industry demand",
+        "sector demand",
+        "steel sector",
+        "banking sector",
+        "hydrogen sector",
+        "renewable energy",
+        "green energy",
+        "clean energy",
+        "rare earth",
+        "commodity",
+        "industry",
+        "industry growth",
+        "sector growth",
+        "market demand",
+        "supply chain",
+        "raw material prices",
+        "industry competition",
+        "economic policy",
+    ],
+
+    # --------------------------------------------------------
+    # 8. MANAGEMENT AND LEADERSHIP
+    # --------------------------------------------------------
+
+    "management_changes": [
+
+        "appointed ceo",
+        "new ceo",
+        "chief executive officer",
+        "chief financial officer",
+        "appointed cfo",
+        "new cfo",
+        "managing director",
+        "board of directors",
+        "board appointment",
+        "director resignation",
+        "leadership change",
+        "management change",
+        "executive appointment",
+        "executive resignation",
+        "key managerial personnel",
+        "chairman appointed",
+        "new chairman",
+        "resigned as ceo",
+        "leadership succession",
+    ],
+
+    # --------------------------------------------------------
+    # 9. OPERATIONAL DEVELOPMENTS
+    # --------------------------------------------------------
+
+    "operational_developments": [
+
+        "production capacity",
+        "manufacturing capacity",
+        "plant shutdown",
+        "production halt",
+        "production resumed",
+        "factory closure",
+        "factory expansion",
+        "manufacturing facility",
+        "plant operations",
+        "operational disruption",
+        "production target",
+        "capacity utilisation",
+        "capacity utilization",
+        "production volume",
+        "sales volume",
+        "operational performance",
+        "supply disruption",
+        "logistics disruption",
+        "plant commissioning",
+        "new manufacturing unit",
+        "commercial production",
+    ],
+
+    # --------------------------------------------------------
+    # 10. RISKS AND DISRUPTIONS
+    # --------------------------------------------------------
+
+    "risk_and_disruptions": [
+
+        "fraud allegations",
+        "accounting irregularities",
+        "financial irregularities",
+        "cyberattack",
+        "cyber security breach",
+        "data breach",
+        "ransomware",
+        "product recall",
+        "product safety issue",
+        "labour dispute",
+        "labor dispute",
+        "worker strike",
+        "project delay",
+        "project cancellation",
+        "credit risk",
+        "default risk",
+        "loan default",
+        "debt default",
+        "liquidity crisis",
+        "business disruption",
+        "supply shortage",
+        "fire incident",
+        "industrial accident",
+        "environmental violation",
+        "operational risk",
+        "reputation risk",
+    ],
+
+    # --------------------------------------------------------
+    # 11. INVESTOR RELATIONS
+    # --------------------------------------------------------
+
+    "investor_relations": [
+
+        "investor presentation",
+        "investor meet",
+        "investor meeting",
+        "earnings call",
+        "conference call",
+        "annual general meeting",
+        "agm",
+        "shareholder meeting",
+        "investor day",
+        "management guidance",
+        "revenue guidance",
+        "growth guidance",
+        "business outlook",
+        "future outlook",
+        "corporate presentation",
+        "investor conference",
+    ],
+
+    # --------------------------------------------------------
+    # 12. TECHNOLOGY AND INNOVATION
+    # --------------------------------------------------------
+
+    "technology_innovation": [
+
+        "technology partnership",
+        "digital transformation",
+        "artificial intelligence",
+        "ai investment",
+        "technology investment",
+        "new technology",
+        "research and development",
+        "r&d",
+        "innovation centre",
+        "technology centre",
+        "digital banking",
+        "automation project",
+        "new product launch",
+        "product development",
+        "technology deployment",
+        "cloud transformation",
+        "digital platform",
+    ],
+}
+
+
+# ============================================================
+# CATEGORY WEIGHTS
+# ============================================================
+
+CATEGORY_WEIGHTS = {
+
+    "financial_performance": 5,
+    "business_developments": 5,
+    "corporate_actions": 5,
+    "regulatory_legal": 5,
+
+    "analyst_recommendations": 4,
+    "stock_market_commentary": 3,
+    "sector_developments": 2,
+
+    "management_changes": 4,
+    "operational_developments": 4,
+    "risk_and_disruptions": 5,
+    "investor_relations": 3,
+    "technology_innovation": 3,
+}
+
+
+# ============================================================
+# RESULT STRUCTURE
+# ============================================================
+
+@dataclass
+class FinancialNewsResult:
+
+    accepted: bool
+    category: str
+    score: int
+    reason: str
+
+
+# ============================================================
+# REGEX HELPER
+# ============================================================
+
+def contains_pattern(text, patterns):
+    """Check whether any regular expression matches."""
+
+    return any(
+        re.search(pattern, text, re.IGNORECASE)
+        for pattern in patterns
+    )
+
+
+# ============================================================
+# CATEGORY IDENTIFICATION
+# ============================================================
+
+def find_financial_categories(text):
+    """Identify matching financial news categories."""
+
+    matched_categories = []
+
+    for category, keywords in FINANCIAL_CATEGORIES.items():
+
+        if any(
+            keyword.lower() in text
+            for keyword in keywords
+        ):
+            matched_categories.append(category)
+
+    return matched_categories
+
+
+# ============================================================
+# PROMOTIONAL VALIDATION
+# ============================================================
+
+def is_promotional(headline, description=""):
+    """
+    Identify explicit advertisements and stock-picking
+    promotional content.
+
+    Genuine reported analyst recommendations are not
+    rejected simply because they contain Buy/Sell language.
+    """
+
+    headline = clean_text(headline).lower()
+    description = clean_text(description).lower()
+
+    # Check headline and description for explicit promotions.
+    if contains_pattern(headline, PROMOTIONAL_PATTERNS):
+        return True
+
+    if contains_pattern(description, PROMOTIONAL_PATTERNS):
+        return True
+
+    # Reject generic stock-picking roundups.
+    if contains_pattern(headline, GENERIC_ROUNDUP_PATTERNS):
+        return True
+
+    return False
+
+
+# ============================================================
+# FINANCIAL NEWS FILTER
+# ============================================================
+
+def evaluate_financial_news(
+    headline,
+    description="",
+    publisher=""
+):
+    """
+    Evaluate whether an article is meaningful financial news.
+
+    Company relevance must be checked separately using
+    company_filter.py.
+
+    Returns FinancialNewsResult.
+    """
+
+    headline = clean_text(headline)
+    description = clean_text(description)
+    publisher = clean_text(publisher)
+
+    headline_lower = headline.lower()
+    description_lower = description.lower()
+
+    combined_text = (
+        f"{headline_lower} {description_lower}"
+    )
+
+    # --------------------------------------------------------
+    # 1. Reject promotional content
+    # --------------------------------------------------------
+
+    if is_promotional(headline, description):
+
+        return FinancialNewsResult(
+            accepted=False,
+            category="promotional",
+            score=0,
+            reason=(
+                "Advertisement, stock recommendation "
+                "or promotional content detected"
+            )
+        )
+
+    # --------------------------------------------------------
+    # 2. Identify financial categories
+    # --------------------------------------------------------
+
+    categories = find_financial_categories(
+        combined_text
+    )
+
+    if not categories:
+
+        return FinancialNewsResult(
+            accepted=False,
+            category="unclassified",
+            score=0,
+            reason="No meaningful financial news signals found"
+        )
+
+    # --------------------------------------------------------
+    # 3. Reject generic market roundups
+    # --------------------------------------------------------
+
+    is_generic_roundup = contains_pattern(
+        headline_lower,
+        GENERIC_ROUNDUP_PATTERNS
+    )
+
+    has_company_specific_analysis = any(
+        category in categories
+        for category in [
+            "financial_performance",
+            "business_developments",
+            "corporate_actions",
+            "regulatory_legal",
+            "management_changes",
+            "operational_developments",
+            "risk_and_disruptions",
+        ]
+    )
+
+    if is_generic_roundup and not has_company_specific_analysis:
+
+        return FinancialNewsResult(
+            accepted=False,
+            category="generic_market_roundup",
+            score=0,
+            reason=(
+                "Generic market roundup without "
+                "specific company development"
+            )
+        )
+
+    # --------------------------------------------------------
+    # 4. Calculate relevance score
+    # --------------------------------------------------------
+
+    # Each category contributes its weight only once.
+    score = sum(
+        CATEGORY_WEIGHTS.get(category, 0)
+        for category in categories
+    )
+
+    # --------------------------------------------------------
+    # 5. Minimum financial relevance threshold
+    # --------------------------------------------------------
+
+    if score < 2:
+
+        return FinancialNewsResult(
+            accepted=False,
+            category=", ".join(categories),
+            score=score,
+            reason="Financial relevance score too low"
+        )
+
+    # --------------------------------------------------------
+    # 6. Accept article
+    # --------------------------------------------------------
+
+    return FinancialNewsResult(
+        accepted=True,
+        category=", ".join(categories),
+        score=score,
+        reason="Meaningful financial news signals identified"
+    )
+
+
+# ============================================================
+# SIMPLE PUBLIC INTERFACE
+# ============================================================
+
+def is_financially_relevant(
+    headline,
+    description="",
+    publisher=""
+):
+    """Return True when an article passes financial filtering."""
+
+    result = evaluate_financial_news(
+        headline,
+        description,
+        publisher
+    )
+
+    return result.accepted
