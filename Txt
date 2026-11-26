@@ -1,3 +1,1 @@
-(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>python -c "from pathlib import Path; import pyarrow.parquet as pq; p=next(Path(r'silver_news\data\silver\news_by_ticker').rglob('*.parquet')); print('FILE:',p); print('COLUMNS:',pq.ParquetFile(p).schema.names)"
-FILE: silver_news\data\silver\news_by_ticker\batch_id=batch_07e77310986b401f\part-00000.parquet
-COLUMNS: ['article_id', 'bronze_file', 'cleaned_full_text', 'cleaned_headline', 'full_text', 'headline', 'ingested_at', 'json_parse_failed', 'kafka_key', 'kafka_ts', 'element', 'negative_score', 'neutral_score', 'offset', 'partition', 'positive_score', 'published_at', 'raw_json', 'sentiment', 'sentiment_score', 'source', 'text_for_analysis', 'ticker', 'topic', 'url', 'validation_reason', 'validation_status']
+python -c "from gold.news_normalizer import NewsSilverNormalizer; n=NewsSilverNormalizer(); count=n.scan_once(); print('NORMALIZED ROWS:',count)"
