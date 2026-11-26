@@ -1,3 +1,10 @@
+SELECT
+    COUNT(*) AS total_articles,
+    COUNT(event_time) AS articles_with_event_time,
+    COUNT(*) FILTER (WHERE event_time IS NULL) AS articles_without_event_time
+FROM fintel_gold.gold_news_sentiment;
+
+
 SELECT column_name, data_type
 FROM information_schema.columns
 WHERE table_schema = 'fintel_gold'
