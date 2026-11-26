@@ -1,157 +1,370 @@
-
-(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>python main_v4.py
-
-========== FINTEL GOLD V4 STARTING ==========
-
-PostgreSQL connection: SUCCESS
-Database: fintel_db
-User: postgres
-Schema: fintel_gold
-
-Gold tables:
-  - gold_alerts
-  - gold_audit
-  - gold_news_sentiment
-  - gold_sentiment_price
-  - gold_stock_metrics
-
-All five Gold tables verified!
-WARNING: Using incubator modules: jdk.incubator.vector
-:: loading settings :: url = jar:file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/gold_venv/Lib/site-packages/pyspark/jars/ivy-2.5.3.jar!/org/apache/ivy/core/settings/ivysettings.xml
-Ivy Default Cache set to: C:\Users\2000209445\.ivy2.5.2\cache
-The jars for the packages stored in: C:\Users\2000209445\.ivy2.5.2\jars
-io.delta#delta-spark_4.1_2.13 added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-e31913c4-9bb7-423f-ab99-a0d611c5b619;1.0
-        confs: [default]
-        found io.delta#delta-spark_4.1_2.13;4.3.0 in central
-        found io.delta#delta-storage;4.3.0 in central
-        found io.unitycatalog#unitycatalog-client;0.5.0 in central
-        found org.slf4j#slf4j-api;2.0.13 in central
-        found org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 in central
-        found org.apache.logging.log4j#log4j-api;2.25.3 in central
-        found com.google.code.findbugs#jsr305;3.0.2 in central
-        found io.unitycatalog#unitycatalog-hadoop;0.5.0 in central
-        found org.apache.logging.log4j#log4j-core;2.25.3 in central
-        found io.delta#delta-kernel-api;4.3.0 in central
-        found org.roaringbitmap#RoaringBitmap;0.9.25 in central
-        found com.fasterxml.jackson.core#jackson-databind;2.13.5 in central
-        found com.fasterxml.jackson.core#jackson-annotations;2.13.5 in central
-        found com.fasterxml.jackson.core#jackson-core;2.13.5 in central
-        found com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 in central
-        found org.roaringbitmap#shims;0.9.25 in central
-        found io.delta#delta-kernel-defaults;4.3.0 in central
-        found org.apache.hadoop#hadoop-client-runtime;3.4.2 in central
-        found org.apache.parquet#parquet-hadoop;1.16.0 in central
-        found org.apache.parquet#parquet-column;1.16.0 in central
-        found org.apache.parquet#parquet-common;1.16.0 in central
-        found org.apache.parquet#parquet-format-structures;1.16.0 in central
-        found javax.annotation#javax.annotation-api;1.3.2 in central
-        found org.apache.parquet#parquet-encoding;1.16.0 in central
-        found org.locationtech.jts#jts-core;1.20.0 in central
-        found org.xerial.snappy#snappy-java;1.1.10.7 in central
-        found io.airlift#aircompressor;2.0.2 in central
-        found commons-pool#commons-pool;1.6 in central
-        found com.github.luben#zstd-jni;1.5.7-3 in central
-        found org.apache.hadoop#hadoop-client-api;3.4.2 in central
-        found commons-logging#commons-logging;1.3.0 in central
-        found org.apache.parquet#parquet-jackson;1.16.0 in central
-        found io.delta#delta-kernel-unitycatalog;4.3.0 in central
-:: resolution report :: resolve 1792ms :: artifacts dl 109ms
-        :: modules in use:
-        com.fasterxml.jackson.core#jackson-annotations;2.13.5 from central in [default]
-        com.fasterxml.jackson.core#jackson-core;2.13.5 from central in [default]
-        com.fasterxml.jackson.core#jackson-databind;2.13.5 from central in [default]
-        com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 from central in [default]
-        com.github.luben#zstd-jni;1.5.7-3 from central in [default]
-        com.google.code.findbugs#jsr305;3.0.2 from central in [default]
-        commons-logging#commons-logging;1.3.0 from central in [default]
-        commons-pool#commons-pool;1.6 from central in [default]
-        io.airlift#aircompressor;2.0.2 from central in [default]
-        io.delta#delta-kernel-api;4.3.0 from central in [default]
-        io.delta#delta-kernel-defaults;4.3.0 from central in [default]
-        io.delta#delta-kernel-unitycatalog;4.3.0 from central in [default]
-        io.delta#delta-spark_4.1_2.13;4.3.0 from central in [default]
-        io.delta#delta-storage;4.3.0 from central in [default]
-        io.unitycatalog#unitycatalog-client;0.5.0 from central in [default]
-        io.unitycatalog#unitycatalog-hadoop;0.5.0 from central in [default]
-        javax.annotation#javax.annotation-api;1.3.2 from central in [default]
-        org.apache.hadoop#hadoop-client-api;3.4.2 from central in [default]
-        org.apache.hadoop#hadoop-client-runtime;3.4.2 from central in [default]
-        org.apache.logging.log4j#log4j-api;2.25.3 from central in [default]
-        org.apache.logging.log4j#log4j-core;2.25.3 from central in [default]
-        org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 from central in [default]
-        org.apache.parquet#parquet-column;1.16.0 from central in [default]
-        org.apache.parquet#parquet-common;1.16.0 from central in [default]
-        org.apache.parquet#parquet-encoding;1.16.0 from central in [default]
-        org.apache.parquet#parquet-format-structures;1.16.0 from central in [default]
-        org.apache.parquet#parquet-hadoop;1.16.0 from central in [default]
-        org.apache.parquet#parquet-jackson;1.16.0 from central in [default]
-        org.locationtech.jts#jts-core;1.20.0 from central in [default]
-        org.roaringbitmap#RoaringBitmap;0.9.25 from central in [default]
-        org.roaringbitmap#shims;0.9.25 from central in [default]
-        org.slf4j#slf4j-api;2.0.13 from central in [default]
-        org.xerial.snappy#snappy-java;1.1.10.7 from central in [default]
-        :: evicted modules:
-        org.slf4j#slf4j-api;2.0.17 by [org.slf4j#slf4j-api;2.0.13] in [default]
-        org.slf4j#slf4j-api;1.7.36 by [org.slf4j#slf4j-api;2.0.13] in [default]
-        org.slf4j#slf4j-api;1.7.33 by [org.slf4j#slf4j-api;2.0.13] in [default]
-        org.xerial.snappy#snappy-java;1.1.10.4 by [org.xerial.snappy#snappy-java;1.1.10.7] in [default]
-        ---------------------------------------------------------------------
-        |                  |            modules            ||   artifacts   |
-        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
-        ---------------------------------------------------------------------
-        |      default     |   37  |   0   |   0   |   4   ||   33  |   0   |
-        ---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-e31913c4-9bb7-423f-ab99-a0d611c5b619
-        confs: [default]
-        0 artifacts copied, 33 already retrieved (0kB/69ms)
-Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-[GOLD V4][NEWS NORMALIZER] No valid event-time rows in part-00000.parquet
-[GOLD V4][NEWS NORMALIZER] Watching C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker every 15s
-[GOLD V4][NEWS NORMALIZER] No valid event-time rows in part-00000.parquet
-26/11/26 11:59:16 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
-26/11/26 11:59:17 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
-26/11/26 11:59:17 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
-
-========== FINTEL GOLD V4 STARTED ==========
-Stock Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\Market_ticker\silver\data\stock_silver
-News Silver : C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker
-News inbox  : C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\gold_v4\news_stream_input
-PostgreSQL  : fintel_db schema= fintel_gold
-Window      : 5 minutes
-Slide       : 1 minute
-Watermark   : 10 minutes
-Trigger     : 10 seconds
-Queries     : stock metrics / news articles / PostgreSQL as-of enrichment
-[GOLD V4] All three streaming queries are active.
-[GOLD V4] PostgreSQL is the only Gold serving store.
-[GOLD V4] Press Ctrl+C to stop safely.
-26/11/26 11:59:18 WARN MicroBatchExecution: Disabling AQE since AQE is not supported in stateful workloads.
-26/11/26 11:59:19 ERROR MicroBatchExecution: Query fintel-gold-v4-stock-news-asof [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18] terminated with error
-java.lang.AssertionError: assertion failed: There are [2] sources in the checkpoint offsets and now there are [1] sources requested by the query. Cannot continue.
-        at scala.Predef$.assert(Predef.scala:279)
-        at org.apache.spark.sql.execution.streaming.checkpointing.OffsetSeq.toStreamProgress(OffsetSeq.scala:55)
-        at org.apache.spark.sql.execution.streaming.runtime.AcceptsLatestSeenOffsetHandler$.$anonfun$setLatestSeenOffsetOnSources$1(AcceptsLatestSeenOffsetHandler.scala:34)
-        at scala.Option.map(Option.scala:242)
-        at org.apache.spark.sql.execution.streaming.runtime.AcceptsLatestSeenOffsetHandler$.setLatestSeenOffsetOnSources(AcceptsLatestSeenOffsetHandler.scala:34)
-        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.initializeExecution(MicroBatchExecution.scala:402)
-        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.runActivatedStream(MicroBatchExecution.scala:455)
-        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.$anonfun$runStream$1(StreamExecution.scala:347)
-        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
-        at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:804)
-        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.org$apache$spark$sql$execution$streaming$runtime$StreamExecution$$runStream(StreamExecution.scala:307)
-        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution$$anon$1.run(StreamExecution.scala:230)
-26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group c8dace89-ea2a-42f0-9614-2d8cd64533bb. Cannot find active jobs for it.
-26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group c8dace89-ea2a-42f0-9614-2d8cd64533bb. Cannot find active jobs for it.
-26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group f13bb199-6aa4-454a-9e0b-2d8997a63eda. Cannot find active jobs for it.
-26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group f13bb199-6aa4-454a-9e0b-2d8997a63eda. Cannot find active jobs for it.
+   at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$Slice.match(Pattern.java:4115)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+        at java.base/java.util.regex.Pattern$GroupHead.match(Pattern.java:4816)
+        at java.base/java.util.regex.Pattern$Loop.match(Pattern.java:4925)
+        at java.base/java.util.regex.Pattern$GroupTail.match(Pattern.java:4847)
+        at java.base/java.util.regex.Pattern$BranchConn.match(Pattern.java:4725)
+        at java.base/java.util.regex.Pattern$CharProperty.match(Pattern.java:3958)
+        at java.base/java.util.regex.Pattern$Branch.match(Pattern.java:4761)
+26/11/26 14:38:44 WARN DAGScheduler: Failed to cancel job group 5df49115-e2a3-47da-a5ef-95ffdd5f15d7. Cannot find active jobs for it.
+26/11/26 14:38:44 WARN DAGScheduler: Failed to cancel job group 292e4b69-13dc-40a8-9145-643067c7e86e. Cannot find active jobs for it.
+26/11/26 14:38:44 WARN DAGScheduler: Failed to cancel job group 292e4b69-13dc-40a8-9145-643067c7e86e. Cannot find active jobs for it.
+26/11/26 14:38:45 WARN SparkEnv: Exception while deleting Spark temp dir: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33\userFiles-b4b5aa11-edd4-4a01-bd11-b61cf18d8308
+java.io.IOException: Failed to delete: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33\userFiles-b4b5aa11-edd4-4a01-bd11-b61cf18d8308\org.xerial.snappy_snappy-java-1.1.10.7.jar
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:308)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:291)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:248)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:158)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:157)
+        at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1062)
+        at org.apache.spark.SparkEnv.stop(SparkEnv.scala:131)
+        at org.apache.spark.SparkContext.$anonfun$stop$25(SparkContext.scala:2406)
+        at org.apache.spark.util.Utils$.tryLogNonFatalError(Utils.scala:1314)
+        at org.apache.spark.SparkContext.stop(SparkContext.scala:2406)
+        at org.apache.spark.SparkContext.stop(SparkContext.scala:2308)
+        at org.apache.spark.api.java.JavaSparkContext.stop(JavaSparkContext.scala:552)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+        at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+        at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+        at py4j.Gateway.invoke(Gateway.java:282)
+        at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+        at py4j.commands.CallCommand.execute(CallCommand.java:79)
+        at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:184)
+        at py4j.ClientServerConnection.run(ClientServerConnection.java:108)
+        at java.base/java.lang.Thread.run(Thread.java:840)
 [GOLD V4] Pipeline stopped.
 Traceback (most recent call last):
-  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 98, in <module>
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 126, in <module>
     main()
-  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 72, in main
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 99, in main
     spark.streams.awaitAnyTermination()
   File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\streaming\query.py", line 603, in awaitAnyTermination
     return self._jsqm.awaitAnyTermination()
@@ -161,32 +374,337 @@ Traceback (most recent call last):
                    ^^^^^^^^^^^^^^^^^
   File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\errors\exceptions\captured.py", line 269, in deco
     raise converted from None
-pyspark.errors.exceptions.captured.StreamingQueryException: [STREAM_FAILED] Query [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18] terminated with exception: assertion failed: There are [2] sources in the checkpoint offsets and now there are [1] sources requested by the query. Cannot continue. SQLSTATE: XXKST
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\clientserver.py", line 644, in _call_proxy
+    return_value = getattr(self.pool[obj_id], method)(*params)
+^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\utils.py", line 165, in call
+    raise e
+^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\utils.py", line 162, in call
+    self.func(DataFrame(jdf, wrapped_session_jdf), batch_id)
+^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 454, in <lambda>
+    .foreachBatch(lambda df, bid: _process_integrated_batch(df, bid, integrated_run))
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 336, in _process_integrated_batch
+    stats = _batch_metrics(integrated)
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 179, in _batch_metrics
+    row = df.agg(*expressions).first()
+      ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 964, in first
+    return self.head()
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 959, in head
+    rs = self.head(1)
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 961, in head
+    return self.take(n)
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 460, in take
+    return self.limit(num).collect()
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 443, in collect
+    sock_info = self._jdf.collectToPython()
+^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\java_gateway.py", line 1362, in __call__
+    return_value = get_return_value(
+  ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\errors\exceptions\captured.py", line 263, in deco
+    return f(*a, **kw)
+^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\protocol.py", line 327, in get_return_value
+    raise Py4JJavaError(
+^^^^^^^^^^^
+pyspark.errors.exceptions.captured.StreamingQueryException: [STREAM_FAILED] Query [id = f34b3926-7aa3-4352-b5a1-1b614ecc868b, runId = 46af69c1-e984-4c92-82df-3a31a3e91845] terminated with exception: [FOREACH_BATCH_USER_FUNCTION_ERROR] An error occurred in the user provided function in foreach batch sink. Reason: An exception was raised by the Python Proxy. Return Message: Traceback (most recent call last):
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\clientserver.py", line 644, in _call_proxy
+    return_value = getattr(self.pool[obj_id], method)(*params)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\utils.py", line 165, in call
+    raise e
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\utils.py", line 162, in call
+    self.func(DataFrame(jdf, wrapped_session_jdf), batch_id)
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 454, in <lambda>
+    .foreachBatch(lambda df, bid: _process_integrated_batch(df, bid, integrated_run))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 336, in _process_integrated_batch
+    stats = _batch_metrics(integrated)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold\gold_job_v4.py", line 179, in _batch_metrics
+    row = df.agg(*expressions).first()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 964, in first
+    return self.head()
+           ^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 959, in head
+    rs = self.head(1)
+         ^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 961, in head
+    return self.take(n)
+           ^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 460, in take
+    return self.limit(num).collect()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\classic\dataframe.py", line 443, in collect
+    sock_info = self._jdf.collectToPython()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\java_gateway.py", line 1362, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\errors\exceptions\captured.py", line 263, in deco
+    return f(*a, **kw)
+           ^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\protocol.py", line 327, in get_return_value
+    raise Py4JJavaError(
+py4j.protocol.Py4JJavaError: An error occurred while calling o478.collectToPython.
+: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 5.0 failed 1 times, most recent failure: Lost task 0.0 in stage 5.0 (TID 6) (localhost executor driver): org.apache.spark.SparkException: Python worker exited unexpectedly (crashed)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator$$anonfun$1.applyOrElse(PythonRunner.scala:685)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator$$anonfun$1.applyOrElse(PythonRunner.scala:663)
+        at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:35)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1034)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1014)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:596)
+        at org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)
+        at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:611)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.hashAgg_doAggregateWithoutKey_0$(Unknown Source)
+        at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+        at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+        at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:50)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:153)
+        at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:57)
+        at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:111)
+        at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+        at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:180)
+        at org.apache.spark.scheduler.Task.run(Task.scala:147)
+        at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$5(Executor.scala:716)
+        at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:86)
+        at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:83)
+        at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:97)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:719)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.EOFException
+        at java.base/java.io.DataInputStream.readInt(DataInputStream.java:386)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1022)
+        ... 25 more
+
+Driver stacktrace:
+        at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$3(DAGScheduler.scala:3122)
+        at scala.Option.getOrElse(Option.scala:201)
+        at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:3122)
+        at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:3114)
+        at scala.collection.immutable.List.foreach(List.scala:323)
+        at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:3114)
+        at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1303)
+        at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1303)
+        at scala.Option.foreach(Option.scala:437)
+        at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1303)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3397)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3328)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3317)
+        at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:50)
+        at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:1017)
+        at org.apache.spark.SparkContext.runJob(SparkContext.scala:2496)
+        at org.apache.spark.SparkContext.runJob(SparkContext.scala:2517)
+        at org.apache.spark.SparkContext.runJob(SparkContext.scala:2536)
+        at org.apache.spark.SparkContext.runJob(SparkContext.scala:2561)
+        at org.apache.spark.rdd.RDD.$anonfun$collect$1(RDD.scala:1057)
+        at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+        at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+        at org.apache.spark.rdd.RDD.withScope(RDD.scala:417)
+        at org.apache.spark.rdd.RDD.collect(RDD.scala:1056)
+        at org.apache.spark.sql.execution.SparkPlan.executeCollect(SparkPlan.scala:462)
+        at org.apache.spark.sql.classic.Dataset.$anonfun$collectToPython$1(Dataset.scala:2085)
+        at org.apache.spark.sql.classic.Dataset.$anonfun$withAction$2(Dataset.scala:2265)
+        at org.apache.spark.sql.execution.QueryExecution$.withInternalError(QueryExecution.scala:717)
+        at org.apache.spark.sql.classic.Dataset.$anonfun$withAction$1(Dataset.scala:2263)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$8(SQLExecution.scala:177)
+        at org.apache.spark.sql.execution.SQLExecution$.withSessionTagsApplied(SQLExecution.scala:285)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$7(SQLExecution.scala:139)
+        at org.apache.spark.JobArtifactSet$.withActiveJobArtifactState(JobArtifactSet.scala:94)
+        at org.apache.spark.sql.artifact.ArtifactManager.$anonfun$withResources$1(ArtifactManager.scala:112)
+        at org.apache.spark.sql.artifact.ArtifactManager.withClassLoaderIfNeeded(ArtifactManager.scala:106)
+        at org.apache.spark.sql.artifact.ArtifactManager.withResources(ArtifactManager.scala:111)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$6(SQLExecution.scala:139)
+        at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:308)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$1(SQLExecution.scala:138)
+        at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:804)
+        at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId0(SQLExecution.scala:92)
+        at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:250)
+        at org.apache.spark.sql.classic.Dataset.withAction(Dataset.scala:2263)
+        at org.apache.spark.sql.classic.Dataset.collectToPython(Dataset.scala:2081)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+        at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+        at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+        at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+        at py4j.Gateway.invoke(Gateway.java:282)
+        at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+        at py4j.commands.CallCommand.execute(CallCommand.java:79)
+        at py4j.ClientServerConnection.sendCommand(ClientServerConnection.java:246)
+        at py4j.CallbackClient.sendCommand(CallbackClient.java:384)
+        at py4j.CallbackClient.sendCommand(CallbackClient.java:356)
+        at py4j.reflection.PythonProxyHandler.invoke(PythonProxyHandler.java:106)
+        at jdk.proxy3/jdk.proxy3.$Proxy65.call(Unknown Source)
+        at org.apache.spark.sql.execution.streaming.sources.PythonForeachBatchHelper$.$anonfun$callForeachBatch$1(ForeachBatchSink.scala:87)
+        at org.apache.spark.sql.execution.streaming.sources.PythonForeachBatchHelper$.$anonfun$callForeachBatch$1$adapted(ForeachBatchSink.scala:87)
+        at org.apache.spark.sql.execution.streaming.sources.ForeachBatchSink.callBatchWriter(ForeachBatchSink.scala:56)
+        at org.apache.spark.sql.execution.streaming.sources.ForeachBatchSink.addBatch(ForeachBatchSink.scala:49)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.$anonfun$runBatch$19(MicroBatchExecution.scala:1074)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$8(SQLExecution.scala:177)
+        at org.apache.spark.sql.execution.SQLExecution$.withSessionTagsApplied(SQLExecution.scala:285)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$7(SQLExecution.scala:139)
+        at org.apache.spark.JobArtifactSet$.withActiveJobArtifactState(JobArtifactSet.scala:94)
+        at org.apache.spark.sql.artifact.ArtifactManager.$anonfun$withResources$1(ArtifactManager.scala:112)
+        at org.apache.spark.sql.artifact.ArtifactManager.withClassLoaderIfNeeded(ArtifactManager.scala:106)
+        at org.apache.spark.sql.artifact.ArtifactManager.withResources(ArtifactManager.scala:111)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$6(SQLExecution.scala:139)
+        at org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:308)
+        at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId0$1(SQLExecution.scala:138)
+        at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:804)
+        at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId0(SQLExecution.scala:92)
+        at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:250)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.$anonfun$runBatch$18(MicroBatchExecution.scala:1065)
+        at org.apache.spark.sql.execution.streaming.runtime.ProgressContext.reportTimeTaken(ProgressReporter.scala:200)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.runBatch(MicroBatchExecution.scala:1065)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.$anonfun$executeOneBatch$2(MicroBatchExecution.scala:516)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.sql.execution.streaming.runtime.ProgressContext.reportTimeTaken(ProgressReporter.scala:200)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.executeOneBatch(MicroBatchExecution.scala:481)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.$anonfun$runActivatedStream$1(MicroBatchExecution.scala:461)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.$anonfun$runActivatedStream$1$adapted(MicroBatchExecution.scala:461)
+        at org.apache.spark.sql.execution.streaming.runtime.TriggerExecutor.runOneBatch(TriggerExecutor.scala:40)
+        at org.apache.spark.sql.execution.streaming.runtime.TriggerExecutor.runOneBatch$(TriggerExecutor.scala:38)
+        at org.apache.spark.sql.execution.streaming.runtime.ProcessingTimeExecutor.runOneBatch(TriggerExecutor.scala:71)
+        at org.apache.spark.sql.execution.streaming.runtime.ProcessingTimeExecutor.execute(TriggerExecutor.scala:83)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.runActivatedStream(MicroBatchExecution.scala:461)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.$anonfun$runStream$1(StreamExecution.scala:347)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:804)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.org$apache$spark$sql$execution$streaming$runtime$StreamExecution$$runStream(StreamExecution.scala:307)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution$$anon$1.run(StreamExecution.scala:230)
+Caused by: org.apache.spark.SparkException: Python worker exited unexpectedly (crashed)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator$$anonfun$1.applyOrElse(PythonRunner.scala:685)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator$$anonfun$1.applyOrElse(PythonRunner.scala:663)
+        at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:35)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1034)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1014)
+        at org.apache.spark.api.python.BasePythonRunner$ReaderIterator.hasNext(PythonRunner.scala:596)
+        at org.apache.spark.InterruptibleIterator.hasNext(InterruptibleIterator.scala:37)
+        at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:611)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.hashAgg_doAggregateWithoutKey_0$(Unknown Source)
+        at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+        at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+        at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:50)
+        at scala.collection.Iterator$$anon$9.hasNext(Iterator.scala:593)
+        at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:153)
+        at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:57)
+        at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:111)
+        at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+        at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:180)
+        at org.apache.spark.scheduler.Task.run(Task.scala:147)
+        at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$5(Executor.scala:716)
+        at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:86)
+        at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:83)
+        at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:97)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:719)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.EOFException
+        at java.base/java.io.DataInputStream.readInt(DataInputStream.java:386)
+        at org.apache.spark.api.python.PythonRunner$$anon$3.read(PythonRunner.scala:1022)
+        ... 25 more
+
+ SQLSTATE: 39000 SQLSTATE: XXKST
 === Streaming Query ===
-Identifier: fintel-gold-v4-stock-news-asof [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18]
-Current Committed Offsets: {}
-Current Available Offsets: {}
+Identifier: fintel-gold-v4-stock-news-asof [id = f34b3926-7aa3-4352-b5a1-1b614ecc868b, runId = 46af69c1-e984-4c92-82df-3a31a3e91845]
+Current Committed Offsets: {DeltaSource[file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/Market_ticker/silver/data/stock_silver]: {"sourceVersion":1,"reservoirId":"ea73969b-8cbf-43b3-bd47-792fa921a13d","reservoirVersion":393,"index":-1,"isStartingVersion":false}}
+Current Available Offsets: {DeltaSource[file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/Market_ticker/silver/data/stock_silver]: {"sourceVersion":1,"reservoirId":"ea73969b-8cbf-43b3-bd47-792fa921a13d","reservoirVersion":393,"index":-1,"isStartingVersion":false}}
 
 Current State: ACTIVE
 Thread State: RUNNABLE
 
 Logical Plan:
-~WriteToMicroBatchDataSourceV1 ForeachBatchSink, bb0a2ec5-f917-4e2c-8527-93e61574f8da, [queryName=fintel-gold-v4-stock-news-asof, checkpointLocation=C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\checkpoints\gold_v4\integrated], Append
+~WriteToMicroBatchDataSourceV1 ForeachBatchSink, f34b3926-7aa3-4352-b5a1-1b614ecc868b, [queryName=fintel-gold-v4-stock-news-asof, checkpointLocation=C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\checkpoints\gold_v4\integrated_v2], Append
 +- ~Project [symbol#48, w#65-T600000ms.start AS window_start#83, w#65-T600000ms.end AS window_end#84, price_first#66, price_last#67, price_high#68, price_low#69, round(CASE WHEN NOT (price_first#66 = cast(0 as double)) THEN (((price_last#67 - price_first#66) / price_first#66) * 100.0) END, 4) AS price_change_pct#85, round(CASE WHEN NOT (price_first#66 = cast(0 as double)) THEN (((price_high#68 - price_low#69) / price_first#66) * 100.0) END, 4) AS price_range_pct#86, day_change_pct#71, cast(tick_count#70L as bigint) AS tick_count#90L, current_timestamp() AS computed_at#87]
    +- ~Aggregate [symbol#48, window#82-T600000ms], [symbol#48, window#82-T600000ms AS w#65-T600000ms, min_by(price#49, event_time#51-T600000ms) AS price_first#66, max_by(price#49, event_time#51-T600000ms) AS price_last#67, max(price#49) AS price_high#68, min(price#49) AS price_low#69, cast(count(1) as bigint) AS tick_count#70L, max_by(day_change_pct#50, event_time#51-T600000ms) AS day_change_pct#71]
       +- ~Filter isnotnull(event_time#51-T600000ms)
          +- ~Expand [[named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 0), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 0) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 60000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 60000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 120000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 120000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 180000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 180000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 240000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 240000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms]], [window#82-T600000ms, symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms]
-            +- ~EventTimeWatermark a16ade23-b2e0-4f12-97de-a8eaf2bf1d32, event_time#51: timestamp, 10 minutes
+            +- ~EventTimeWatermark 36db879d-72b8-4754-a674-fa31ba506581, event_time#51: timestamp, 10 minutes
                +- ~Filter isnotnull(event_time#51)
                   +- ~Filter (isnotnull(price#49) AND (price#49 > cast(0 as double)))
                      +- ~Filter (isnotnull(symbol#48) AND (length(symbol#48) > 0))
                         +- ~Project [upper(trim(symbol#19, None)) AS symbol#48, cast(current_price#21 as double) AS price#49, cast(change_percent#23 as double) AS day_change_pct#50, coalesce(publication_timestamp#28, market_timestamp#26) AS event_time#51]
                            +- ~StreamingExecutionRelation DeltaSource[file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/Market_ticker/silver/data/stock_silver], [tick_id#18, symbol#19, yahoo_symbol#20, current_price#21, change#22, change_percent#23, currency#24, source#25, market_timestamp#26, fetched_timestamp#27, publication_timestamp#28, silver_ingested_at#29, topic#30, partition#31, offset#32L, kafka_timestamp#33, kafka_key#34, raw_json#35]
 
+2026-11-26 14:38:45,625 INFO py4j.clientserver Closing down clientserver connection
+26/11/26 14:38:45 ERROR ShutdownHookManager: Exception while deleting Spark temp dir: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33\userFiles-b4b5aa11-edd4-4a01-bd11-b61cf18d8308
+java.io.IOException: Failed to delete: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33\userFiles-b4b5aa11-edd4-4a01-bd11-b61cf18d8308\org.xerial.snappy_snappy-java-1.1.10.7.jar
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:308)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:291)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:248)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:158)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:157)
+        at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1062)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:70)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:67)
+        at scala.collection.ArrayOps$.foreach$extension(ArrayOps.scala:1324)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:67)
+        at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:231)
+        at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:205)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
+        at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:205)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at scala.util.Try$.apply(Try.scala:217)
+        at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:205)
+        at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:184)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
 
-(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>SUCCESS: The process with PID 13348 (child process of PID 18368) has been terminated.
-SUCCESS: The process with PID 18368 (child process of PID 13624) has been terminated.
-SUCCESS: The process with PID 13624 (child process of PID 14096) has been terminated.
-
-
-(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>26/11/26 14:38:45 ERROR ShutdownHookManager: Exception while deleting Spark temp dir: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33
+java.io.IOException: Failed to delete: C:\Users\2000209445\AppData\Local\Temp\spark-ff2eaf53-5277-4597-8faa-ad28cfa8cd33\userFiles-b4b5aa11-edd4-4a01-bd11-b61cf18d8308\org.xerial.snappy_snappy-java-1.1.10.7.jar
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:308)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:291)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:291)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:277)
+        at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:248)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:158)
+        at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:157)
+        at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1062)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:70)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:67)
+        at scala.collection.ArrayOps$.foreach$extension(ArrayOps.scala:1324)
+        at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:67)
+        at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:231)
+        at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:205)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1941)
+        at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:205)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at scala.util.Try$.apply(Try.scala:217)
+        at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:205)
+        at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:184)
+        at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+        at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+        at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+        at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+        at java.base/java.lang.Thread.run(Thread.java:840)
+ERROR: The process with PID 30272 (child process of PID 31544) could not be terminated.
+Reason: There is no running instance of the task.
+SUCCESS: The process with PID 31544 (child process of PID 19816) has been terminated.
+SUCCESS: The process with PID 19816 (child process of PID 17728) has been terminated.
