@@ -1,1 +1,10 @@
-python -c "import pandas as pd; from pathlib import Path; from config import settings; p=next(Path(r'silver_news\data\silver\news_by_ticker').rglob('*.parquet')); d=pd.read_parquet(p); c=settings.NEWS_TIME_COLUMN; print('CONFIGURED COLUMN:',repr(c)); print('SOURCE DTYPE:',d[c].dtype); parsed=pd.to_datetime(d[c],errors='coerce',utc=True); print('PARSED VALID:',parsed.notna().sum()); print('PARSED NULL:',parsed.isna().sum()); print('PARSED SAMPLES:',parsed.head(5).to_list()); print('ARTICLE IDS:',d['article_id'].notna().sum()); print('TICKERS:',d['ticker'].notna().sum())"
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>python -c "import pandas as pd; from pathlib import Path; from config import settings; p=next(Path(r'silver_news\data\silver\news_by_ticker').rglob('*.parquet')); d=pd.read_parquet(p); c=settings.NEWS_TIME_COLUMN; print('CONFIGURED COLUMN:',repr(c)); print('SOURCE DTYPE:',d[c].dtype); parsed=pd.to_datetime(d[c],errors='coerce',utc=True); print('PARSED VALID:',parsed.notna().sum()); print('PARSED NULL:',parsed.isna().sum()); print('PARSED SAMPLES:',parsed.head(5).to_list()); print('ARTICLE IDS:',d['article_id'].notna().sum()); print('TICKERS:',d['ticker'].notna().sum())"
+CONFIGURED COLUMN: 'ingested_at'
+SOURCE DTYPE: str
+PARSED VALID: 22
+PARSED NULL: 0
+PARSED SAMPLES: [Timestamp('2026-11-17 06:12:36.013176+0000', tz='UTC'), Timestamp('2026-11-17 06:12:36.013176+0000', tz='UTC'), Timestamp('2026-11-12 06:25:07.593437+0000', tz='UTC'), Timestamp('2026-11-13 06:49:27.920374+0000', tz='UTC'), Timestamp('2026-11-12 14:55:55.884083+0000', tz='UTC')]
+ARTICLE IDS: 22
+TICKERS: 22
+
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>
