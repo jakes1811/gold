@@ -1,1 +1,192 @@
-python -c "import pandas as pd; from pathlib import Path; from config import settings; p=next(Path(r'silver_news\data\silver\news_by_ticker').rglob('*.parquet')); d=pd.read_parquet(p); c=settings.NEWS_TIME_COLUMN; print('CONFIGURED COLUMN:',repr(c)); print('SOURCE DTYPE:',d[c].dtype); parsed=pd.to_datetime(d[c],errors='coerce',utc=True); print('PARSED VALID:',parsed.notna().sum()); print('PARSED NULL:',parsed.isna().sum()); print('PARSED SAMPLES:',parsed.head(5).to_list()); print('ARTICLE IDS:',d['article_id'].notna().sum()); print('TICKERS:',d['ticker'].notna().sum())"
+
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>python main_v4.py
+
+========== FINTEL GOLD V4 STARTING ==========
+
+PostgreSQL connection: SUCCESS
+Database: fintel_db
+User: postgres
+Schema: fintel_gold
+
+Gold tables:
+  - gold_alerts
+  - gold_audit
+  - gold_news_sentiment
+  - gold_sentiment_price
+  - gold_stock_metrics
+
+All five Gold tables verified!
+WARNING: Using incubator modules: jdk.incubator.vector
+:: loading settings :: url = jar:file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/gold_venv/Lib/site-packages/pyspark/jars/ivy-2.5.3.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: C:\Users\2000209445\.ivy2.5.2\cache
+The jars for the packages stored in: C:\Users\2000209445\.ivy2.5.2\jars
+io.delta#delta-spark_4.1_2.13 added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-e31913c4-9bb7-423f-ab99-a0d611c5b619;1.0
+        confs: [default]
+        found io.delta#delta-spark_4.1_2.13;4.3.0 in central
+        found io.delta#delta-storage;4.3.0 in central
+        found io.unitycatalog#unitycatalog-client;0.5.0 in central
+        found org.slf4j#slf4j-api;2.0.13 in central
+        found org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 in central
+        found org.apache.logging.log4j#log4j-api;2.25.3 in central
+        found com.google.code.findbugs#jsr305;3.0.2 in central
+        found io.unitycatalog#unitycatalog-hadoop;0.5.0 in central
+        found org.apache.logging.log4j#log4j-core;2.25.3 in central
+        found io.delta#delta-kernel-api;4.3.0 in central
+        found org.roaringbitmap#RoaringBitmap;0.9.25 in central
+        found com.fasterxml.jackson.core#jackson-databind;2.13.5 in central
+        found com.fasterxml.jackson.core#jackson-annotations;2.13.5 in central
+        found com.fasterxml.jackson.core#jackson-core;2.13.5 in central
+        found com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 in central
+        found org.roaringbitmap#shims;0.9.25 in central
+        found io.delta#delta-kernel-defaults;4.3.0 in central
+        found org.apache.hadoop#hadoop-client-runtime;3.4.2 in central
+        found org.apache.parquet#parquet-hadoop;1.16.0 in central
+        found org.apache.parquet#parquet-column;1.16.0 in central
+        found org.apache.parquet#parquet-common;1.16.0 in central
+        found org.apache.parquet#parquet-format-structures;1.16.0 in central
+        found javax.annotation#javax.annotation-api;1.3.2 in central
+        found org.apache.parquet#parquet-encoding;1.16.0 in central
+        found org.locationtech.jts#jts-core;1.20.0 in central
+        found org.xerial.snappy#snappy-java;1.1.10.7 in central
+        found io.airlift#aircompressor;2.0.2 in central
+        found commons-pool#commons-pool;1.6 in central
+        found com.github.luben#zstd-jni;1.5.7-3 in central
+        found org.apache.hadoop#hadoop-client-api;3.4.2 in central
+        found commons-logging#commons-logging;1.3.0 in central
+        found org.apache.parquet#parquet-jackson;1.16.0 in central
+        found io.delta#delta-kernel-unitycatalog;4.3.0 in central
+:: resolution report :: resolve 1792ms :: artifacts dl 109ms
+        :: modules in use:
+        com.fasterxml.jackson.core#jackson-annotations;2.13.5 from central in [default]
+        com.fasterxml.jackson.core#jackson-core;2.13.5 from central in [default]
+        com.fasterxml.jackson.core#jackson-databind;2.13.5 from central in [default]
+        com.fasterxml.jackson.datatype#jackson-datatype-jdk8;2.13.5 from central in [default]
+        com.github.luben#zstd-jni;1.5.7-3 from central in [default]
+        com.google.code.findbugs#jsr305;3.0.2 from central in [default]
+        commons-logging#commons-logging;1.3.0 from central in [default]
+        commons-pool#commons-pool;1.6 from central in [default]
+        io.airlift#aircompressor;2.0.2 from central in [default]
+        io.delta#delta-kernel-api;4.3.0 from central in [default]
+        io.delta#delta-kernel-defaults;4.3.0 from central in [default]
+        io.delta#delta-kernel-unitycatalog;4.3.0 from central in [default]
+        io.delta#delta-spark_4.1_2.13;4.3.0 from central in [default]
+        io.delta#delta-storage;4.3.0 from central in [default]
+        io.unitycatalog#unitycatalog-client;0.5.0 from central in [default]
+        io.unitycatalog#unitycatalog-hadoop;0.5.0 from central in [default]
+        javax.annotation#javax.annotation-api;1.3.2 from central in [default]
+        org.apache.hadoop#hadoop-client-api;3.4.2 from central in [default]
+        org.apache.hadoop#hadoop-client-runtime;3.4.2 from central in [default]
+        org.apache.logging.log4j#log4j-api;2.25.3 from central in [default]
+        org.apache.logging.log4j#log4j-core;2.25.3 from central in [default]
+        org.apache.logging.log4j#log4j-slf4j2-impl;2.25.3 from central in [default]
+        org.apache.parquet#parquet-column;1.16.0 from central in [default]
+        org.apache.parquet#parquet-common;1.16.0 from central in [default]
+        org.apache.parquet#parquet-encoding;1.16.0 from central in [default]
+        org.apache.parquet#parquet-format-structures;1.16.0 from central in [default]
+        org.apache.parquet#parquet-hadoop;1.16.0 from central in [default]
+        org.apache.parquet#parquet-jackson;1.16.0 from central in [default]
+        org.locationtech.jts#jts-core;1.20.0 from central in [default]
+        org.roaringbitmap#RoaringBitmap;0.9.25 from central in [default]
+        org.roaringbitmap#shims;0.9.25 from central in [default]
+        org.slf4j#slf4j-api;2.0.13 from central in [default]
+        org.xerial.snappy#snappy-java;1.1.10.7 from central in [default]
+        :: evicted modules:
+        org.slf4j#slf4j-api;2.0.17 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.slf4j#slf4j-api;1.7.36 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.slf4j#slf4j-api;1.7.33 by [org.slf4j#slf4j-api;2.0.13] in [default]
+        org.xerial.snappy#snappy-java;1.1.10.4 by [org.xerial.snappy#snappy-java;1.1.10.7] in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   37  |   0   |   0   |   4   ||   33  |   0   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-e31913c4-9bb7-423f-ab99-a0d611c5b619
+        confs: [default]
+        0 artifacts copied, 33 already retrieved (0kB/69ms)
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+[GOLD V4][NEWS NORMALIZER] No valid event-time rows in part-00000.parquet
+[GOLD V4][NEWS NORMALIZER] Watching C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker every 15s
+[GOLD V4][NEWS NORMALIZER] No valid event-time rows in part-00000.parquet
+26/11/26 11:59:16 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+26/11/26 11:59:17 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+26/11/26 11:59:17 WARN ResolveWriteToStream: spark.sql.adaptive.enabled is not supported in streaming DataFrames/Datasets and will be disabled.
+
+========== FINTEL GOLD V4 STARTED ==========
+Stock Silver: C:\Users\2000209445\Desktop\FINTEL_UPDATE\Market_ticker\silver\data\stock_silver
+News Silver : C:\Users\2000209445\Desktop\FINTEL_UPDATE\silver_news\data\silver\news_by_ticker
+News inbox  : C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\gold_v4\news_stream_input
+PostgreSQL  : fintel_db schema= fintel_gold
+Window      : 5 minutes
+Slide       : 1 minute
+Watermark   : 10 minutes
+Trigger     : 10 seconds
+Queries     : stock metrics / news articles / PostgreSQL as-of enrichment
+[GOLD V4] All three streaming queries are active.
+[GOLD V4] PostgreSQL is the only Gold serving store.
+[GOLD V4] Press Ctrl+C to stop safely.
+26/11/26 11:59:18 WARN MicroBatchExecution: Disabling AQE since AQE is not supported in stateful workloads.
+26/11/26 11:59:19 ERROR MicroBatchExecution: Query fintel-gold-v4-stock-news-asof [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18] terminated with error
+java.lang.AssertionError: assertion failed: There are [2] sources in the checkpoint offsets and now there are [1] sources requested by the query. Cannot continue.
+        at scala.Predef$.assert(Predef.scala:279)
+        at org.apache.spark.sql.execution.streaming.checkpointing.OffsetSeq.toStreamProgress(OffsetSeq.scala:55)
+        at org.apache.spark.sql.execution.streaming.runtime.AcceptsLatestSeenOffsetHandler$.$anonfun$setLatestSeenOffsetOnSources$1(AcceptsLatestSeenOffsetHandler.scala:34)
+        at scala.Option.map(Option.scala:242)
+        at org.apache.spark.sql.execution.streaming.runtime.AcceptsLatestSeenOffsetHandler$.setLatestSeenOffsetOnSources(AcceptsLatestSeenOffsetHandler.scala:34)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.initializeExecution(MicroBatchExecution.scala:402)
+        at org.apache.spark.sql.execution.streaming.runtime.MicroBatchExecution.runActivatedStream(MicroBatchExecution.scala:455)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.$anonfun$runStream$1(StreamExecution.scala:347)
+        at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.scala:18)
+        at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:804)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution.org$apache$spark$sql$execution$streaming$runtime$StreamExecution$$runStream(StreamExecution.scala:307)
+        at org.apache.spark.sql.execution.streaming.runtime.StreamExecution$$anon$1.run(StreamExecution.scala:230)
+26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group c8dace89-ea2a-42f0-9614-2d8cd64533bb. Cannot find active jobs for it.
+26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group c8dace89-ea2a-42f0-9614-2d8cd64533bb. Cannot find active jobs for it.
+26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group f13bb199-6aa4-454a-9e0b-2d8997a63eda. Cannot find active jobs for it.
+26/11/26 11:59:19 WARN DAGScheduler: Failed to cancel job group f13bb199-6aa4-454a-9e0b-2d8997a63eda. Cannot find active jobs for it.
+[GOLD V4] Pipeline stopped.
+Traceback (most recent call last):
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 98, in <module>
+    main()
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\main_v4.py", line 72, in main
+    spark.streams.awaitAnyTermination()
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\sql\streaming\query.py", line 603, in awaitAnyTermination
+    return self._jsqm.awaitAnyTermination()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\py4j\java_gateway.py", line 1362, in __call__
+    return_value = get_return_value(
+                   ^^^^^^^^^^^^^^^^^
+  File "C:\Users\2000209445\Desktop\FINTEL_UPDATE\gold_venv\Lib\site-packages\pyspark\errors\exceptions\captured.py", line 269, in deco
+    raise converted from None
+pyspark.errors.exceptions.captured.StreamingQueryException: [STREAM_FAILED] Query [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18] terminated with exception: assertion failed: There are [2] sources in the checkpoint offsets and now there are [1] sources requested by the query. Cannot continue. SQLSTATE: XXKST
+=== Streaming Query ===
+Identifier: fintel-gold-v4-stock-news-asof [id = bb0a2ec5-f917-4e2c-8527-93e61574f8da, runId = 0081b1cb-a8dd-4276-a344-1d3ce8137a18]
+Current Committed Offsets: {}
+Current Available Offsets: {}
+
+Current State: ACTIVE
+Thread State: RUNNABLE
+
+Logical Plan:
+~WriteToMicroBatchDataSourceV1 ForeachBatchSink, bb0a2ec5-f917-4e2c-8527-93e61574f8da, [queryName=fintel-gold-v4-stock-news-asof, checkpointLocation=C:\Users\2000209445\Desktop\FINTEL_UPDATE\data\checkpoints\gold_v4\integrated], Append
++- ~Project [symbol#48, w#65-T600000ms.start AS window_start#83, w#65-T600000ms.end AS window_end#84, price_first#66, price_last#67, price_high#68, price_low#69, round(CASE WHEN NOT (price_first#66 = cast(0 as double)) THEN (((price_last#67 - price_first#66) / price_first#66) * 100.0) END, 4) AS price_change_pct#85, round(CASE WHEN NOT (price_first#66 = cast(0 as double)) THEN (((price_high#68 - price_low#69) / price_first#66) * 100.0) END, 4) AS price_range_pct#86, day_change_pct#71, cast(tick_count#70L as bigint) AS tick_count#90L, current_timestamp() AS computed_at#87]
+   +- ~Aggregate [symbol#48, window#82-T600000ms], [symbol#48, window#82-T600000ms AS w#65-T600000ms, min_by(price#49, event_time#51-T600000ms) AS price_first#66, max_by(price#49, event_time#51-T600000ms) AS price_last#67, max(price#49) AS price_high#68, min(price#49) AS price_low#69, cast(count(1) as bigint) AS tick_count#70L, max_by(day_change_pct#50, event_time#51-T600000ms) AS day_change_pct#71]
+      +- ~Filter isnotnull(event_time#51-T600000ms)
+         +- ~Expand [[named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 0), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 0) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 60000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 60000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 120000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 120000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 180000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 180000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms], [named_struct(start, knownnullable(precisetimestampconversion(((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 240000000), LongType, TimestampType)), end, knownnullable(precisetimestampconversion((((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - CASE WHEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) < cast(0 as bigint)) THEN (((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) + 60000000) ELSE ((precisetimestampconversion(event_time#51-T600000ms, TimestampType, LongType) - 0) % 60000000) END) - 240000000) + 300000000), LongType, TimestampType))), symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms]], [window#82-T600000ms, symbol#48, price#49, day_change_pct#50, event_time#51-T600000ms]
+            +- ~EventTimeWatermark a16ade23-b2e0-4f12-97de-a8eaf2bf1d32, event_time#51: timestamp, 10 minutes
+               +- ~Filter isnotnull(event_time#51)
+                  +- ~Filter (isnotnull(price#49) AND (price#49 > cast(0 as double)))
+                     +- ~Filter (isnotnull(symbol#48) AND (length(symbol#48) > 0))
+                        +- ~Project [upper(trim(symbol#19, None)) AS symbol#48, cast(current_price#21 as double) AS price#49, cast(change_percent#23 as double) AS day_change_pct#50, coalesce(publication_timestamp#28, market_timestamp#26) AS event_time#51]
+                           +- ~StreamingExecutionRelation DeltaSource[file:/C:/Users/2000209445/Desktop/FINTEL_UPDATE/Market_ticker/silver/data/stock_silver], [tick_id#18, symbol#19, yahoo_symbol#20, current_price#21, change#22, change_percent#23, currency#24, source#25, market_timestamp#26, fetched_timestamp#27, publication_timestamp#28, silver_ingested_at#29, topic#30, partition#31, offset#32L, kafka_timestamp#33, kafka_key#34, raw_json#35]
+
+
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>SUCCESS: The process with PID 13348 (child process of PID 18368) has been terminated.
+SUCCESS: The process with PID 18368 (child process of PID 13624) has been terminated.
+SUCCESS: The process with PID 13624 (child process of PID 14096) has been terminated.
+
+
+(gold_venv) C:\Users\2000209445\Desktop\FINTEL_UPDATE>
